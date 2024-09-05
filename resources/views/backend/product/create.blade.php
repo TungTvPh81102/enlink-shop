@@ -37,7 +37,7 @@
                             <div class="form-group">
                                 <label for="formGroupExampleInput2">Mã sản phẩm</label>
                                 <input type="text" name="sku" class="form-control mb-3" id="formGroupExampleInput2"
-                                       placeholder="Mã sản phẩm" value="{{ old('sku') }}">
+                                       placeholder="Mã sản phẩm"  value="{{ old('sku', strtoupper(\Illuminate\Support\Str::random(10)) ) }}">
                                 @error('sku')
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror

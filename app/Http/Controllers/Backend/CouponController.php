@@ -85,7 +85,7 @@ class CouponController extends Controller
     {
         $coupon = Coupon::query()->findOrFail($id);
 
-        $title = 'Quản lý má giảm giá';
+        $title = 'Quản lý mã giảm giá';
         $subtitle = 'Cập nhật mã giảm giá: ' . $coupon->name;
 
         return view('backend.coupon.edit',

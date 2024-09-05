@@ -10,7 +10,7 @@
             <h2 class="header-title">{{ $title ?? '' }}</h2>
             <div class="header-sub-title">
                 <nav class="breadcrumb breadcrumb-dash">
-                    <a href="{{ asset('#') }}" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Dashboard</a>
+                    <a href="{{ route('admin.dashboard') }}" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Dashboard</a>
                     <a class="breadcrumb-item" href="">{{ $title ?? '' }}</a>
                     <span class="breadcrumb-item active">{{ $subtitle ?? '' }}</span>
                 </nav>

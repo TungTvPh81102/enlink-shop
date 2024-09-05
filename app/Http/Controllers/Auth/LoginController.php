@@ -76,7 +76,7 @@ class LoginController extends Controller
 
             request()->session()->invalidate();
 
-            return redirect()->route('home')->with('success', 'Đăng xuất thành công');
+            return redirect()->route('auth.login')->with('success', 'Đăng xuất thành công');
         }
 
     }

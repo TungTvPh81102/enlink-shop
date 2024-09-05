@@ -59,12 +59,11 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validateRequest($request);
+//        $this->validateRequest($request);
 
         list($dataProduct,
             $dataProductVariants,
             $dataProductGalleries) = $this->handleData($request);
-
         try {
             DB::beginTransaction();
 

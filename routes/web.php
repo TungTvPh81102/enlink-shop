@@ -17,6 +17,16 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::
+
+Route::get('/product/{slug}', [\App\Http\Controllers\ProductController::class, 'showDetailProduct'])
+    ->name('product.detail');
+
+Route::prefix('cart')->as('cart.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\CartController::class, 'showCart'])->name('show');
+    Route::post('/add-to-cart', [\App\Http\Controllers\CartController::class, 'addToCart'])->name('add-to-cart');
+});
+
 Route::prefix('auth')->as('auth.')->group(function () {
 
     Route::get('/register', [\App\Http\Controllers\Auth\RegisterController::class, 'showFormRegister'])
@@ -40,6 +50,5 @@ Route::prefix('auth')->as('auth.')->group(function () {
         ->name('reset-password.show');
     Route::post('/reset-password', [\App\Http\Controllers\Auth\ForgotPassswordController::class, 'handleResetPassword'])
         ->name('reset-password');
-
 });
 

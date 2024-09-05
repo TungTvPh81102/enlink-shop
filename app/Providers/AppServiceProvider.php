@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Category;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,6 +31,13 @@ class AppServiceProvider extends ServiceProvider
                 ->subject('Verify Email Address')
                 ->line('Click the button below to verify your email address.')
                 ->action('Verify Email Address', $url);
+        });
+
+        View::composer('layouts._header', function ($view) {
+            $categories = Category::query()
+                ->where('parent_id', 0)
+                ->latest('id')->get();
+            $view->with('categories', $categories);
         });
     }
 }

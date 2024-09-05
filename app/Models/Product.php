@@ -35,6 +35,7 @@ class Product extends Model
         'view',
         'product_gallery',
         'product_variants',
+        'product_type',
     ];
 
     public function category()

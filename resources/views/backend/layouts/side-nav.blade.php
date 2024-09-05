@@ -221,6 +221,14 @@
                     </li>
                 </ul>
             </li>
+            <li class="nav-item dropdown">
+                <a href="{{ route('home') }}">
+                                <span class="icon-holder">
+                                           <i class="bx bx-store"></i>
+                                </span>
+                    <span class="title">Quay lại cửa hàng</span>
+                </a>
+            </li>
         </ul>
     </div>
 </div>

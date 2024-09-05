@@ -21,7 +21,9 @@
     <div class="container-fluid">
         <div class="d-flex full-height p-v-20 flex-column justify-content-between">
             <div class="d-none d-md-flex p-h-40">
-                <img src="{{asset('assets/backend/images/logo/logo.png')}}" alt="">
+                <a href="{{ route('home') }}">
+                    <img src="{{ asset('assets/backend/images/logo/logo.png') }}" alt="">
+                </a>
             </div>
             <div class="container">
                 <div class="row align-items-center">

@@ -240,15 +240,11 @@
                     </div>
                     <div class="form-group mb-3 d-flex ">
                         <div class="checkbox mr-4">
-                            <input name="product_type[]" value="is_home" id="checkbox1" type="checkbox">
-                            <label for="checkbox1">Trang chủ</label>
-                        </div>
-                        <div class="checkbox mr-4">
-                            <input name="product_type[]" value="is_new" id="checkbox2" type="checkbox">
+                            <input {{ $product->product_type == 'is_new' ? 'checked' : '' }} name="product_type"  value="is_new" id="checkbox2" type="checkbox">
                             <label for="checkbox2">Sản phẩm mới</label>
                         </div>
                         <div class="checkbox">
-                            <input name="product_type[]" value="is_hot" id="checkbox3" type="checkbox">
+                            <input  {{ $product->product_type == 'is_hot' ? 'checked' : '' }} name="product_type" value="is_hot" id="checkbox3" type="checkbox">
                             <label for="checkbox3">Sản phẩm hot</label>
                         </div>
                     </div>
