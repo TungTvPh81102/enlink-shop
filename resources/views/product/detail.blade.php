@@ -1,5 +1,13 @@
 @extends('layouts._app')
 
+@section('styles')
+    <style>
+        .selected-color {
+            border: 2px solid black;
+        }
+    </style>
+@endsection
+
 @section('content')
     <section class="z-index-2 position-relative pb-2 mb-12">
         <div class="bg-body-secondary mb-3">
@@ -7,10 +15,10 @@
                 <nav class="py-4 lh-30px" aria-label="breadcrumb">
                     <ol class="breadcrumb justify-content-center py-1 mb-0">
                         <li class="breadcrumb-item">
-                            <a title="Home" href="../index-2.html">Home</a>
+                            <a title="Home" href="{{ route('home') }}">Home</a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a title="Shop" href="shop-layout-v2.html">Sản phẩm</a>
+                            <a title="Shop" href="{{ route('product-category.list') }}">Sản phẩm</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
                             {{ $product->name }}
@@ -100,14 +108,18 @@
             </div>
             <div class="col-md-6 pt-md-0 pt-10">
                 <p class="d-flex align-items-center mb-6">
-                    <span class="text-decoration-line-through">39.00</span>
+                        <span id="getProductPrice"
+                              class="text-decoration-line-through"></span>
                     <span
-                        id="getProductPrice"
-                        class="fs-18px text-body-emphasis ps-6 fw-bold">{{ number_format($product->price_regular,0) ?? '' }}</span>
-                    <span
-                        class="badge text-bg-primary fs-6 fw-semibold ms-7 px-6 py-3"
-                    >20%</span
-                    >
+                        id="getPriceSale"
+                        class="fs-18px text-body-emphasis ps-6 fw-bold"></span>
+
+                    @if(!empty($product->price_sale))
+                        <span
+                            class="badge text-bg-primary fs-6 fw-semibold ms-7 px-6 py-3"
+                        >{{ $product->price_sale }}%</span
+                        >
+                    @endif
                 </p>
                 <h1 class="mb-4 pb-2 fs-4">{{ $product->name ?? '' }}</h1>
                 <p class="fs-15px">
@@ -115,7 +127,7 @@
                 </p>
                 <form action="{{ route('cart.add-to-cart') }}" method="post" class="pb-8 mb-4">
                     @csrf
-                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <input type="hidden" name="product_id" value="{{ $product->id  }}">
                     <div class="form-group shop-swatch mb-7 d-flex align-items-center">
                         <span class="fw-semibold text-body-emphasis me-7">Kích cỡ: </span>
                         <ul class="list-inline d-flex justify-content-start mb-0">
@@ -134,7 +146,7 @@
                                         <input
                                             type="radio"
                                             id="sizeRadio{{ $key }}"
-                                            name="size"
+                                            name="size_id"
                                             value="{{ $value->size->id }}"
                                             class="product-info-size d-none getSizePrice"
                                             {{ $key == 0 ? 'checked' : '' }}
@@ -169,7 +181,7 @@
                                         <input
                                             type="radio"
                                             id="colorRadio{{ $colorCode }}"
-                                            name="color"
+                                            name="color_id"
                                             {{ $key == 0 ? 'checked' : '' }}
                                             class="product-info-color d-none getSizePrice"
                                             value="{{ $value->color->id }}"
@@ -200,11 +212,12 @@
                                     <i class="far fa-minus"></i>
                                 </a>
                                 <input
-                                    name="number"
+                                    name="qty"
                                     type="number"
                                     id="number"
-                                    class="product-info-2-quantity form-control w-100 px-6 text-center"
+                                    class="product-info-2-quantity form-control w-100 px-6 text-center mb-4"
                                     value="1"
+                                    {{ old('qty') }}
                                     required
                                 />
                                 <a href="#"
@@ -411,7 +424,7 @@
                             data-bs-parent="#accordionFlushExample"
                         >
                             <div class="pt-8 pb-3">
-                               {!! $product->content !!}
+                                {!! $product->content !!}
                             </div>
                         </div>
                         <div class="accordion-item pb-4 mt-7">
@@ -508,1214 +521,70 @@
             </div>
         </div>
     </section>
-    <div class="border-top w-100 h-1px"></div>
-    <section class="container container-xxl pt-15 pb-15 pt-lg-17 pb-lg-20">
-        <div class="text-center"><h2 class="mb-12">You may also like</h2></div>
-        <div
-            class="slick-slider"
-            data-slick-options="{&#34;arrows&#34;:true,&#34;centerMode&#34;:true,&#34;centerPadding&#34;:&#34;calc((100% - 1440px) / 2)&#34;,&#34;dots&#34;:true,&#34;infinite&#34;:true,&#34;responsive&#34;:[{&#34;breakpoint&#34;:1200,&#34;settings&#34;:{&#34;arrows&#34;:false,&#34;dots&#34;:false,&#34;slidesToShow&#34;:3}},{&#34;breakpoint&#34;:992,&#34;settings&#34;:{&#34;arrows&#34;:false,&#34;dots&#34;:false,&#34;slidesToShow&#34;:2}},{&#34;breakpoint&#34;:576,&#34;settings&#34;:{&#34;arrows&#34;:false,&#34;dots&#34;:false,&#34;slidesToShow&#34;:1}}],&#34;slidesToShow&#34;:4}"
-        >
-            <div class="mb-6">
-                <div class="card card-product grid-2 bg-transparent border-0">
-                    <figure
-                        class="card-img-top position-relative mb-7 overflow-hidden"
-                    >
-                        <a
-                            href="product-details-v1.html"
-                            class="hover-zoom-in d-block"
-                            title="Shield Conditioner"
-                        >
-                            <img
-                                src="#"
-                                data-src="../assets/images/products/product-01-330x440.jpg"
-                                class="img-fluid lazy-image w-100"
-                                alt="Shield Conditioner"
-                                width="330"
-                                height="440"
-                            />
-                        </a>
-                        <div class="position-absolute product-flash z-index-2">
-                  <span class="badge badge-product-flash on-sale bg-primary"
-                  >-25%</span
-                  >
-                        </div>
-                        <div
-                            class="position-absolute d-flex z-index-2 product-actions vertical"
-                        >
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm quick-view"
-                                href="#"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Quick View"
+    @if(!empty($productRelated->count()))
+        <div class="border-top w-100 h-1px"></div>
+        <section class="container container-xxl pt-15 pb-15 pt-lg-17 pb-lg-20">
+            <div class="text-center"><h2 class="mb-12">Sản phẩm cùng loại</h2></div>
+            <div
+                class="slick-slider"
+                data-slick-options="{&#34;arrows&#34;:true,&#34;centerMode&#34;:true,&#34;centerPadding&#34;:&#34;calc((100% - 1440px) / 2)&#34;,&#34;dots&#34;:true,&#34;infinite&#34;:true,&#34;responsive&#34;:[{&#34;breakpoint&#34;:1200,&#34;settings&#34;:{&#34;arrows&#34;:false,&#34;dots&#34;:false,&#34;slidesToShow&#34;:3}},{&#34;breakpoint&#34;:992,&#34;settings&#34;:{&#34;arrows&#34;:false,&#34;dots&#34;:false,&#34;slidesToShow&#34;:2}},{&#34;breakpoint&#34;:576,&#34;settings&#34;:{&#34;arrows&#34;:false,&#34;dots&#34;:false,&#34;slidesToShow&#34;:1}}],&#34;slidesToShow&#34;:4}"
+            >
+                @foreach($productRelated as $item)
+                    <div class="mb-6">
+                        <div class="card card-product grid-2 bg-transparent border-0">
+                            <figure
+                                class="card-img-top position-relative mb-7 overflow-hidden"
                             >
-                    <span
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                        class="d-flex align-items-center justify-content-center"
-                    >
-                      <svg class="icon icon-eye-light">
-                        <use xlink:href="#icon-eye-light"></use>
-                      </svg>
-                    </span>
-                            </a>
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm wishlist"
-                                href="#"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Add To Wishlist"
-                            >
-                                <svg class="icon icon-star-light">
-                                    <use xlink:href="#icon-star-light"></use>
-                                </svg>
-                            </a>
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm compare"
-                                href="compare.html"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Compare"
-                            >
-                                <svg class="icon icon-arrows-left-right-light">
-                                    <use xlink:href="#icon-arrows-left-right-light"></use>
-                                </svg>
-                            </a>
-                        </div>
-                        <a
-                            href="#"
-                            class="btn btn-add-to-cart btn-dark btn-hover-bg-primary btn-hover-border-primary position-absolute z-index-2 text-nowrap"
-                        >Add To Cart</a
-                        >
-                    </figure>
-                    <div class="card-body text-center p-0">
-                <span
-                    class="d-flex align-items-center price text-body-emphasis fw-bold justify-content-center mb-3 fs-6"
-                >
-                  <del class="text-body fw-500 me-4 fs-13px">$40.00</del>
-                  <ins class="text-decoration-none">$30.00</ins></span
-                >
-                        <h4
-                            class="product-title card-title text-primary-hover text-body-emphasis fs-15px fw-500 mb-3"
-                        >
-                            <a
-                                class="text-decoration-none text-reset"
-                                href="product-details-v1.html"
-                            >Shield Conditioner</a
-                            >
-                        </h4>
-                        <div
-                            class="d-flex align-items-center fs-12px justify-content-center"
-                        >
-                            <div class="rating">
-                                <div class="empty-stars">
-                      <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                </div>
-                                <div class="filled-stars" style="width: 80%">
-                      <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
+                                <a
+                                    href="{{ route('product.detail', $item->slug) }}"
+                                    class="hover-zoom-in d-block"
+                                    title="Shield Conditioner"
+                                >
+                                    <img
+                                        src="{{ Storage::url($item->thumbnail_image) }}"
+                                        class="img-fluid lazy-image w-100"
+                                        alt="{{ $item->name }}"
+                                        width="330"
+                                        height="440"
+                                    />
+                                </a>
+                                @if($item->price_sale > 0)
+                                    <div class="position-absolute product-flash z-index-2">
+                                    <span
+                                        class="badge badge-product-flash on-sale bg-primary">-{{ $item->price_sale }}%</span>
+                                    </div>
+
+                                @else
+                                    @if($item->product_type == 'is_new')
+                                        <div class="position-absolute product-flash z-index-2">
+                                            <span class="badge badge-product-flash on-new">New</span>
+                                        </div>
+                                    @endif
+
+                                @endif
+                            </figure>
+                            <div class="card-body text-center p-0">
+                                <h4
+                                    class="product-title card-title text-primary-hover text-body-emphasis fs-15px fw-500 mb-3"
+                                >
+                                    <a
+                                        class="text-decoration-none text-reset"
+                                        href="{{ route('product.detail', $item->slug) }}"
+                                    >{{ $item->name }}</a
+                                    >
+                                </h4>
+                                <div
+                                    class="d-flex align-items-center fs-12px justify-content-center"
+                                >
                                 </div>
                             </div>
-                            <span class="reviews ms-4 pt-3 fs-14px">2947 reviews</span>
                         </div>
                     </div>
-                </div>
+                @endforeach
+
             </div>
-            <div class="mb-6">
-                <div class="card card-product grid-2 bg-transparent border-0">
-                    <figure
-                        class="card-img-top position-relative mb-7 overflow-hidden"
-                    >
-                        <a
-                            href="product-details-v1.html"
-                            class="hover-zoom-in d-block"
-                            title="Perfecting Facial Oil"
-                        >
-                            <img
-                                src="#"
-                                data-src="../assets/images/products/product-02-330x440.jpg"
-                                class="img-fluid lazy-image w-100"
-                                alt="Perfecting Facial Oil"
-                                width="330"
-                                height="440"
-                            />
-                        </a>
-                        <div
-                            class="position-absolute d-flex z-index-2 product-actions vertical"
-                        >
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm quick-view"
-                                href="#"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Quick View"
-                            >
-                    <span
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                        class="d-flex align-items-center justify-content-center"
-                    >
-                      <svg class="icon icon-eye-light">
-                        <use xlink:href="#icon-eye-light"></use>
-                      </svg>
-                    </span>
-                            </a>
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm wishlist"
-                                href="#"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Add To Wishlist"
-                            >
-                                <svg class="icon icon-star-light">
-                                    <use xlink:href="#icon-star-light"></use>
-                                </svg>
-                            </a>
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm compare"
-                                href="compare.html"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Compare"
-                            >
-                                <svg class="icon icon-arrows-left-right-light">
-                                    <use xlink:href="#icon-arrows-left-right-light"></use>
-                                </svg>
-                            </a>
-                        </div>
-                        <a
-                            href="#"
-                            class="btn btn-add-to-cart btn-dark btn-hover-bg-primary btn-hover-border-primary position-absolute z-index-2 text-nowrap"
-                        >Add To Cart</a
-                        >
-                    </figure>
-                    <div class="card-body text-center p-0">
-                <span
-                    class="d-flex align-items-center price text-body-emphasis fw-bold justify-content-center mb-3 fs-6"
-                >$20.00</span
-                >
-                        <h4
-                            class="product-title card-title text-primary-hover text-body-emphasis fs-15px fw-500 mb-3"
-                        >
-                            <a
-                                class="text-decoration-none text-reset"
-                                href="product-details-v1.html"
-                            >Perfecting Facial Oil</a
-                            >
-                        </h4>
-                        <div
-                            class="d-flex align-items-center fs-12px justify-content-center"
-                        >
-                            <div class="rating">
-                                <div class="empty-stars">
-                      <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                </div>
-                                <div class="filled-stars" style="width: 100%">
-                      <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                </div>
-                            </div>
-                            <span class="reviews ms-4 pt-3 fs-14px">2947 reviews</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mb-6">
-                <div class="card card-product grid-2 bg-transparent border-0">
-                    <figure
-                        class="card-img-top position-relative mb-7 overflow-hidden"
-                    >
-                        <a
-                            href="product-details-v1.html"
-                            class="hover-zoom-in d-block"
-                            title="Enriched Hand &amp; Body Wash"
-                        >
-                            <img
-                                src="#"
-                                data-src="../assets/images/products/product-03-330x440.jpg"
-                                class="img-fluid lazy-image w-100"
-                                alt="Enriched Hand &amp; Body Wash"
-                                width="330"
-                                height="440"
-                            />
-                        </a>
-                        <div class="position-absolute product-flash z-index-2">
-                            <span class="badge badge-product-flash on-new">New</span>
-                        </div>
-                        <div
-                            class="position-absolute d-flex z-index-2 product-actions vertical"
-                        >
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm quick-view"
-                                href="#"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Quick View"
-                            >
-                    <span
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                        class="d-flex align-items-center justify-content-center"
-                    >
-                      <svg class="icon icon-eye-light">
-                        <use xlink:href="#icon-eye-light"></use>
-                      </svg>
-                    </span>
-                            </a>
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm wishlist"
-                                href="#"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Add To Wishlist"
-                            >
-                                <svg class="icon icon-star-light">
-                                    <use xlink:href="#icon-star-light"></use>
-                                </svg>
-                            </a>
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm compare"
-                                href="compare.html"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Compare"
-                            >
-                                <svg class="icon icon-arrows-left-right-light">
-                                    <use xlink:href="#icon-arrows-left-right-light"></use>
-                                </svg>
-                            </a>
-                        </div>
-                        <a
-                            href="#"
-                            class="btn btn-add-to-cart btn-dark btn-hover-bg-primary btn-hover-border-primary position-absolute z-index-2 text-nowrap"
-                        >Add To Cart</a
-                        >
-                    </figure>
-                    <div class="card-body text-center p-0">
-                <span
-                    class="d-flex align-items-center price text-body-emphasis fw-bold justify-content-center mb-3 fs-6"
-                >$29.00</span
-                >
-                        <h4
-                            class="product-title card-title text-primary-hover text-body-emphasis fs-15px fw-500 mb-3"
-                        >
-                            <a
-                                class="text-decoration-none text-reset"
-                                href="product-details-v1.html"
-                            >Enriched Hand &amp; Body Wash</a
-                            >
-                        </h4>
-                        <div
-                            class="d-flex align-items-center fs-12px justify-content-center"
-                        >
-                            <div class="rating">
-                                <div class="empty-stars">
-                      <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                </div>
-                                <div class="filled-stars" style="width: 100%">
-                      <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                </div>
-                            </div>
-                            <span class="reviews ms-4 pt-3 fs-14px">2947 reviews</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mb-6">
-                <div class="card card-product grid-2 bg-transparent border-0">
-                    <figure
-                        class="card-img-top position-relative mb-7 overflow-hidden"
-                    >
-                        <a
-                            href="product-details-v1.html"
-                            class="hover-zoom-in d-block"
-                            title="Shield Shampoo"
-                        >
-                            <img
-                                src="#"
-                                data-src="../assets/images/products/product-04-330x440.jpg"
-                                class="img-fluid lazy-image w-100"
-                                alt="Shield Shampoo"
-                                width="330"
-                                height="440"
-                            />
-                        </a>
-                        <div class="position-absolute product-flash z-index-2">
-                  <span class="badge badge-product-flash on-sale bg-primary"
-                  >-24%</span
-                  >
-                        </div>
-                        <div
-                            class="position-absolute d-flex z-index-2 product-actions vertical"
-                        >
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm quick-view"
-                                href="#"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Quick View"
-                            >
-                    <span
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                        class="d-flex align-items-center justify-content-center"
-                    >
-                      <svg class="icon icon-eye-light">
-                        <use xlink:href="#icon-eye-light"></use>
-                      </svg>
-                    </span>
-                            </a>
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm wishlist"
-                                href="#"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Add To Wishlist"
-                            >
-                                <svg class="icon icon-star-light">
-                                    <use xlink:href="#icon-star-light"></use>
-                                </svg>
-                            </a>
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm compare"
-                                href="compare.html"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Compare"
-                            >
-                                <svg class="icon icon-arrows-left-right-light">
-                                    <use xlink:href="#icon-arrows-left-right-light"></use>
-                                </svg>
-                            </a>
-                        </div>
-                        <a
-                            href="#"
-                            class="btn btn-add-to-cart btn-dark btn-hover-bg-primary btn-hover-border-primary position-absolute z-index-2 text-nowrap"
-                        >Add To Cart</a
-                        >
-                    </figure>
-                    <div class="card-body text-center p-0">
-                <span
-                    class="d-flex align-items-center price text-body-emphasis fw-bold justify-content-center mb-3 fs-6"
-                >
-                  <del class="text-body fw-500 me-4 fs-13px">$25.00</del>
-                  <ins class="text-decoration-none">$19.00</ins></span
-                >
-                        <h4
-                            class="product-title card-title text-primary-hover text-body-emphasis fs-15px fw-500 mb-3"
-                        >
-                            <a
-                                class="text-decoration-none text-reset"
-                                href="product-details-v1.html"
-                            >Shield Shampoo</a
-                            >
-                        </h4>
-                        <div
-                            class="d-flex align-items-center fs-12px justify-content-center"
-                        >
-                            <div class="rating">
-                                <div class="empty-stars">
-                      <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                </div>
-                                <div class="filled-stars" style="width: 80%">
-                      <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                </div>
-                            </div>
-                            <span class="reviews ms-4 pt-3 fs-14px">2947 reviews</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mb-6">
-                <div class="card card-product grid-2 bg-transparent border-0">
-                    <figure
-                        class="card-img-top position-relative mb-7 overflow-hidden"
-                    >
-                        <a
-                            href="product-details-v1.html"
-                            class="hover-zoom-in d-block"
-                            title="Enriched Hand Wash"
-                        >
-                            <img
-                                src="#"
-                                data-src="../assets/images/products/product-05-330x440.jpg"
-                                class="img-fluid lazy-image w-100"
-                                alt="Enriched Hand Wash"
-                                width="330"
-                                height="440"
-                            />
-                        </a>
-                        <div class="position-absolute product-flash z-index-2">
-                  <span class="badge badge-product-flash on-sale bg-primary"
-                  >-26%</span
-                  >
-                        </div>
-                        <div
-                            class="position-absolute d-flex z-index-2 product-actions vertical"
-                        >
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm quick-view"
-                                href="#"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Quick View"
-                            >
-                    <span
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                        class="d-flex align-items-center justify-content-center"
-                    >
-                      <svg class="icon icon-eye-light">
-                        <use xlink:href="#icon-eye-light"></use>
-                      </svg>
-                    </span>
-                            </a>
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm wishlist"
-                                href="#"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Add To Wishlist"
-                            >
-                                <svg class="icon icon-star-light">
-                                    <use xlink:href="#icon-star-light"></use>
-                                </svg>
-                            </a>
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm compare"
-                                href="compare.html"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Compare"
-                            >
-                                <svg class="icon icon-arrows-left-right-light">
-                                    <use xlink:href="#icon-arrows-left-right-light"></use>
-                                </svg>
-                            </a>
-                        </div>
-                        <a
-                            href="#"
-                            class="btn btn-add-to-cart btn-dark btn-hover-bg-primary btn-hover-border-primary position-absolute z-index-2 text-nowrap"
-                        >Add To Cart</a
-                        >
-                    </figure>
-                    <div class="card-body text-center p-0">
-                <span
-                    class="d-flex align-items-center price text-body-emphasis fw-bold justify-content-center mb-3 fs-6"
-                >
-                  <del class="text-body fw-500 me-4 fs-13px">$39.00</del>
-                  <ins class="text-decoration-none">$29.00</ins></span
-                >
-                        <h4
-                            class="product-title card-title text-primary-hover text-body-emphasis fs-15px fw-500 mb-3"
-                        >
-                            <a
-                                class="text-decoration-none text-reset"
-                                href="product-details-v1.html"
-                            >Enriched Hand Wash</a
-                            >
-                        </h4>
-                        <div
-                            class="d-flex align-items-center fs-12px justify-content-center"
-                        >
-                            <div class="rating">
-                                <div class="empty-stars">
-                      <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                </div>
-                                <div class="filled-stars" style="width: 80%">
-                      <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                </div>
-                            </div>
-                            <span class="reviews ms-4 pt-3 fs-14px">2947 reviews</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mb-6">
-                <div class="card card-product grid-2 bg-transparent border-0">
-                    <figure
-                        class="card-img-top position-relative mb-7 overflow-hidden"
-                    >
-                        <a
-                            href="product-details-v1.html"
-                            class="hover-zoom-in d-block"
-                            title="Enriched Duo"
-                        >
-                            <img
-                                src="#"
-                                data-src="../assets/images/products/product-06-330x440.jpg"
-                                class="img-fluid lazy-image w-100"
-                                alt="Enriched Duo"
-                                width="330"
-                                height="440"
-                            />
-                        </a>
-                        <div
-                            class="position-absolute d-flex z-index-2 product-actions vertical"
-                        >
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm quick-view"
-                                href="#"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Quick View"
-                            >
-                    <span
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                        class="d-flex align-items-center justify-content-center"
-                    >
-                      <svg class="icon icon-eye-light">
-                        <use xlink:href="#icon-eye-light"></use>
-                      </svg>
-                    </span>
-                            </a>
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm wishlist"
-                                href="#"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Add To Wishlist"
-                            >
-                                <svg class="icon icon-star-light">
-                                    <use xlink:href="#icon-star-light"></use>
-                                </svg>
-                            </a>
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm compare"
-                                href="compare.html"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Compare"
-                            >
-                                <svg class="icon icon-arrows-left-right-light">
-                                    <use xlink:href="#icon-arrows-left-right-light"></use>
-                                </svg>
-                            </a>
-                        </div>
-                        <a
-                            href="#"
-                            class="btn btn-add-to-cart btn-dark btn-hover-bg-primary btn-hover-border-primary position-absolute z-index-2 text-nowrap"
-                        >Add To Cart</a
-                        >
-                    </figure>
-                    <div class="card-body text-center p-0">
-                <span
-                    class="d-flex align-items-center price text-body-emphasis fw-bold justify-content-center mb-3 fs-6"
-                >$29.00</span
-                >
-                        <h4
-                            class="product-title card-title text-primary-hover text-body-emphasis fs-15px fw-500 mb-3"
-                        >
-                            <a
-                                class="text-decoration-none text-reset"
-                                href="product-details-v1.html"
-                            >Enriched Duo</a
-                            >
-                        </h4>
-                        <div
-                            class="d-flex align-items-center fs-12px justify-content-center"
-                        >
-                            <div class="rating">
-                                <div class="empty-stars">
-                      <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                </div>
-                                <div class="filled-stars" style="width: 100%">
-                      <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                </div>
-                            </div>
-                            <span class="reviews ms-4 pt-3 fs-14px">2947 reviews</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mb-6">
-                <div class="card card-product grid-2 bg-transparent border-0">
-                    <figure
-                        class="card-img-top position-relative mb-7 overflow-hidden"
-                    >
-                        <a
-                            href="product-details-v1.html"
-                            class="hover-zoom-in d-block"
-                            title="Shield Spray"
-                        >
-                            <img
-                                src="#"
-                                data-src="../assets/images/products/product-07-330x440.jpg"
-                                class="img-fluid lazy-image w-100"
-                                alt="Shield Spray"
-                                width="330"
-                                height="440"
-                            />
-                        </a>
-                        <div
-                            class="position-absolute d-flex z-index-2 product-actions vertical"
-                        >
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm quick-view"
-                                href="#"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Quick View"
-                            >
-                    <span
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                        class="d-flex align-items-center justify-content-center"
-                    >
-                      <svg class="icon icon-eye-light">
-                        <use xlink:href="#icon-eye-light"></use>
-                      </svg>
-                    </span>
-                            </a>
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm wishlist"
-                                href="#"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Add To Wishlist"
-                            >
-                                <svg class="icon icon-star-light">
-                                    <use xlink:href="#icon-star-light"></use>
-                                </svg>
-                            </a>
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm compare"
-                                href="compare.html"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Compare"
-                            >
-                                <svg class="icon icon-arrows-left-right-light">
-                                    <use xlink:href="#icon-arrows-left-right-light"></use>
-                                </svg>
-                            </a>
-                        </div>
-                        <a
-                            href="#"
-                            class="btn btn-add-to-cart btn-dark btn-hover-bg-primary btn-hover-border-primary position-absolute z-index-2 text-nowrap"
-                        >Add To Cart</a
-                        >
-                    </figure>
-                    <div class="card-body text-center p-0">
-                <span
-                    class="d-flex align-items-center price text-body-emphasis fw-bold justify-content-center mb-3 fs-6"
-                >$29.00</span
-                >
-                        <h4
-                            class="product-title card-title text-primary-hover text-body-emphasis fs-15px fw-500 mb-3"
-                        >
-                            <a
-                                class="text-decoration-none text-reset"
-                                href="product-details-v1.html"
-                            >Shield Spray</a
-                            >
-                        </h4>
-                        <div
-                            class="d-flex align-items-center fs-12px justify-content-center"
-                        >
-                            <div class="rating">
-                                <div class="empty-stars">
-                      <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                </div>
-                                <div class="filled-stars" style="width: 100%">
-                      <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                </div>
-                            </div>
-                            <span class="reviews ms-4 pt-3 fs-14px">2947 reviews</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mb-6">
-                <div class="card card-product grid-2 bg-transparent border-0">
-                    <figure
-                        class="card-img-top position-relative mb-7 overflow-hidden"
-                    >
-                        <a
-                            href="product-details-v1.html"
-                            class="hover-zoom-in d-block"
-                            title="Shield Spray"
-                        >
-                            <img
-                                src="#"
-                                data-src="../assets/images/products/product-08-330x440.jpg"
-                                class="img-fluid lazy-image w-100"
-                                alt="Shield Spray"
-                                width="330"
-                                height="440"
-                            />
-                        </a>
-                        <div class="position-absolute product-flash z-index-2">
-                  <span class="badge badge-product-flash on-sale bg-primary"
-                  >-36%</span
-                  >
-                        </div>
-                        <div
-                            class="position-absolute d-flex z-index-2 product-actions vertical"
-                        >
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm quick-view"
-                                href="#"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Quick View"
-                            >
-                    <span
-                        data-bs-toggle="modal"
-                        data-bs-target="#quickViewModal"
-                        class="d-flex align-items-center justify-content-center"
-                    >
-                      <svg class="icon icon-eye-light">
-                        <use xlink:href="#icon-eye-light"></use>
-                      </svg>
-                    </span>
-                            </a>
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm wishlist"
-                                href="#"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Add To Wishlist"
-                            >
-                                <svg class="icon icon-star-light">
-                                    <use xlink:href="#icon-star-light"></use>
-                                </svg>
-                            </a>
-                            <a
-                                class="text-body-emphasis bg-body bg-dark-hover text-light-hover rounded-circle square product-action shadow-sm compare"
-                                href="compare.html"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="left"
-                                data-bs-title="Compare"
-                            >
-                                <svg class="icon icon-arrows-left-right-light">
-                                    <use xlink:href="#icon-arrows-left-right-light"></use>
-                                </svg>
-                            </a>
-                        </div>
-                        <a
-                            href="#"
-                            class="btn btn-add-to-cart btn-dark btn-hover-bg-primary btn-hover-border-primary position-absolute z-index-2 text-nowrap"
-                        >Add To Cart</a
-                        >
-                    </figure>
-                    <div class="card-body text-center p-0">
-                <span
-                    class="d-flex align-items-center price text-body-emphasis fw-bold justify-content-center mb-3 fs-6"
-                >
-                  <del class="text-body fw-500 me-4 fs-13px">$39.00</del>
-                  <ins class="text-decoration-none">$25.00</ins></span
-                >
-                        <h4
-                            class="product-title card-title text-primary-hover text-body-emphasis fs-15px fw-500 mb-3"
-                        >
-                            <a
-                                class="text-decoration-none text-reset"
-                                href="product-details-v1.html"
-                            >Shield Spray</a
-                            >
-                        </h4>
-                        <div
-                            class="d-flex align-items-center fs-12px justify-content-center"
-                        >
-                            <div class="rating">
-                                <div class="empty-stars">
-                      <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star-o">
-                          <use xlink:href="#star-o"></use>
-                        </svg>
-                      </span>
-                                </div>
-                                <div class="filled-stars" style="width: 90%">
-                      <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                    <span class="star">
-                        <svg class="icon star text-primary">
-                          <use xlink:href="#star"></use>
-                        </svg>
-                      </span>
-                                </div>
-                            </div>
-                            <span class="reviews ms-4 pt-3 fs-14px">2947 reviews</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
+    @endif
     <div class="border-top w-100 h-1px"></div>
     <section class="container container-xxl pt-15 pb-15 pt-lg-17 pb-lg-20">
         <div class="text-center">
@@ -2888,18 +1757,11 @@
     </section>
 @endsection
 
-@section('styles')
-    <style>
-        .selected-color {
-            border: 2px solid black;
-        }
-
-    </style>
-@endsection
-
 @section('scripts')
     <script>
         $(document).ready(function () {
+            const salePercentage = {{ $product->price_sale }};
+
             function formatNumber(number) {
                 return new Intl.NumberFormat('en-US', {
                     style: 'decimal',
@@ -2908,25 +1770,47 @@
                 }).format(number);
             }
 
-            let selectedSize = document.querySelector('input[name="size"]:checked').dataset.size;
+            function calculateDiscountedPrice(price) {
+                if (salePercentage > 0) {
+                    return price * (1 - salePercentage / 100);
+                }
+                return price;
+            }
+
+            let selectedSize = document.querySelector('input[name="size_id"]:checked').dataset.size;
 
             function updatePrice() {
-                let selectedColorInput = document.querySelector('input[name="color"]:checked');
+                let selectedColorInput = document.querySelector('input[name="color_id"]:checked');
+                let price;
+
                 if (selectedColorInput) {
                     let prices = JSON.parse(selectedColorInput.dataset.prices);
                     let price = prices[selectedSize];
 
                     if (price) {
                         document.querySelector('#getProductPrice').innerText = formatNumber(price);
+                        if (salePercentage > 0) {
+                            let finalPrice = calculateDiscountedPrice(price);
+                            document.querySelector('#getPriceSale').innerText = formatNumber(finalPrice);
+                        } else {
+                            document.querySelector('#getPriceSale').style.display = 'none';
+                            document.querySelector('#getProductPrice').innerText = formatNumber(price);
+                            document.querySelector('#getProductPrice').classList.remove('text-decoration-line-through');
+                            document.querySelector('#getProductPrice').classList.add('fs-18px', 'text-body-emphasis', 'fw-bold');
+                        }
                     } else {
-                        document.querySelector('#getProductPrice').innerText = {{ $product->price_regular }};
+                        document.querySelector('#getProductPrice').innerText = formatNumber(price);
+                        document.querySelector('#getPriceSale').innerText = formatNumber(price);
                     }
+                } else {
+                    document.querySelector('#getProductPrice').innerText = formatNumber(price);
+                    document.querySelector('#getPriceSale').innerText = formatNumber(price);
                 }
             }
 
             function updateAvailableColors(selectedSize) {
                 let firstAvailableColor = null;
-                document.querySelectorAll('input[name="color"]').forEach(function (colorInput) {
+                document.querySelectorAll('input[name="color_id"]').forEach(function (colorInput) {
                     let prices = JSON.parse(colorInput.dataset.prices);
                     if (prices[selectedSize]) {
                         colorInput.disabled = false;
@@ -2953,7 +1837,7 @@
             }
 
             function updateSelectedColorBorder() {
-                document.querySelectorAll('input[name="color"]').forEach(function (colorInput) {
+                document.querySelectorAll('input[name="color_id"]').forEach(function (colorInput) {
                     let label = document.querySelector(`label[for="${colorInput.id}"]`);
                     if (colorInput.checked) {
                         label.classList.remove('border');
@@ -2966,7 +1850,7 @@
             }
 
             function updateStockStatus() {
-                let selectedColorInput = document.querySelector('input[name="color"]:checked');
+                let selectedColorInput = document.querySelector('input[name="color_id"]:checked');
                 const stockStatusElement = document.getElementById('stockStatus');
 
                 if (selectedColorInput) {
@@ -2989,7 +1873,7 @@
             updateSelectedColorBorder();
             updateStockStatus();
 
-            document.querySelectorAll('input[name="size"]').forEach(function (sizeInput) {
+            document.querySelectorAll('input[name="size_id"]').forEach(function (sizeInput) {
                 sizeInput.addEventListener('change', function () {
                     handleSizeChange(this);
                     updateSelectedColorBorder();
@@ -2997,7 +1881,7 @@
                 });
             });
 
-            document.querySelectorAll('input[name="color"]').forEach(function (colorInput) {
+            document.querySelectorAll('input[name="color_id"]').forEach(function (colorInput) {
                 colorInput.addEventListener('change', function () {
                     updatePrice();
                     updateSelectedColorBorder();

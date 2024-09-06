@@ -47,24 +47,36 @@
                                             class="hover-zoom-in d-block"
                                         >
                                             <img
+                                                style="height: 290px; object-fit: cover"
                                                 src="{{ Storage::url($item->thumbnail_image) }}"
                                                 class="img-fluid lazy-image w-100"
                                                 alt="{{ $item->name }}"
                                                 width="330"
-                                                height="440"
                                             />
                                         </a>
                                     </figure>
                                     <div class="card-body text-center p-0">
-                                              <span
-                                                  class="d-flex align-items-center price text-body-emphasis fw-bold justify-content-center mb-3 fs-6"
-                                              >{{ number_format($item->price_regular,0) }}</span
-                                              >
+                                        @php
+                                            $discountedPrice = $item->price_sale > 0 ? $item->price_regular * (1 - ($item->price_sale / 100)) : $item->price_regular;
+                                        @endphp
+                                        @if($item->price_sale > 0)
+                                            <span
+                                                class="d-flex align-items-center price text-body-emphasis fw-bold justify-content-center mb-3 fs-6">
+                                                <del class="text-body fw-500 me-4 fs-13px">{{ number_format($item->price_regular) }}đ</del>
+                                                    <span class="text-danger ms-2">{{ number_format($discountedPrice) }}đ</span>
+                                            </span>
+                                        @else
+                                            <span
+                                                class="d-flex align-items-center price text-body-emphasis fw-bold justify-content-center mb-3 fs-6">
+                                                {{ number_format($item->price_regular) }}đ
+                                            </span>
+                                        @endif
+
                                         <h4
                                             class="product-title card-title text-primary-hover text-body-emphasis fs-15px fw-500 mb-3"
                                         >
                                             <a
-                                                class="text-decoration-none text-reset"
+                                                class="text-decoration-none text-reset text-truncate w-100 d-block  "
                                                 href="{{ route('product.detail', $item->slug) }}"
                                             >{{ $item->name }}</a
                                             >

@@ -25,7 +25,7 @@
                         <input
                             type="text"
                             class="form-control form-control bg-transparent border-primary"
-                            placeholder="Search product"
+                            placeholder="Tìm kiếm sản phẩm"
                         />
                         <div
                             class="form-control-append position-absolute end-0 top-0 bottom-0 d-flex align-items-center"
@@ -41,24 +41,18 @@
                     <div
                         class="d-flex align-items-center justify-content-center mt-6"
                     >
-                        <p class="text-muted mb-0 mr-3">Popular Searches</p>
+                        <p class="text-muted mb-0 mr-3">Tìm kiếm phổ biến</p>
                         <nav class="nav">
-                            <a
-                                class="nav-link text-decoration-underline py-0 px-4"
-                                href="#"
-                            >T-Shirt</a
-                            >
-                            <a
-                                class="nav-link text-decoration-underline py-0 px-4"
-                                href="#"
-                            >Blue</a
-                            >
-                            <a
-                                class="nav-link text-decoration-underline py-0 px-4"
-                                href="#"
-                            >Jacket</a
-                            >
+                            @foreach($categories as $item)
+
+                                <a
+                                    class="nav-link text-decoration-underline py-0 px-4"
+                                    href="{{ route('product-category.list', $item->slug) }}"
+                                >{{ $item->name }}</a
+                                >
+                            @endforeach
                         </nav>
+
                     </div>
                 </form>
             </div>

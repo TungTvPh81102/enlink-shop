@@ -17,13 +17,17 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 Route::get('/', [\App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::
+Route::get('/products/{slug?}/{subSlug?}', [\App\Http\Controllers\ProductController::class, 'showListProduct'])
+    ->name('product-category.list');
 
 Route::get('/product/{slug}', [\App\Http\Controllers\ProductController::class, 'showDetailProduct'])
     ->name('product.detail');
 
+Route::post('/product-filter', [\App\Http\Controllers\ProductController::class, 'filterProduct'])
+    ->name('product.filter');
+
 Route::prefix('cart')->as('cart.')->group(function () {
-    Route::get('/', [\App\Http\Controllers\CartController::class, 'showCart'])->name('show');
+    Route::get('/', [\App\Http\Controllers\CartController::class, 'viewCart'])->name('view');
     Route::post('/add-to-cart', [\App\Http\Controllers\CartController::class, 'addToCart'])->name('add-to-cart');
 });
 

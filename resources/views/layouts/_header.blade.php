@@ -35,7 +35,8 @@
             </div>
             <div class="w-100 text-center">
                 <p class="mb-0 fs-14px fw-bold text-primary text-uppercase">
-                    FREE SHIPPING ON ALL U.S. ORDERS $50+ </p>
+                    Miễn phí vận chuyển cho tất cả các đơn hàng 500,000 đ
+                     </p>
             </div>
             <div class="w-50 d-none d-lg-block">
                 <div class="d-flex align-items-center justify-content-end">
@@ -47,23 +48,10 @@
                             English
                         </button>
                         <div class="dropdown-menu dropdown-menu-end py-5" style="min-width: unset">
-                            <a class="dropdown-item py-1" href="#">French</a>
+                            <a class="dropdown-item py-1" href="#">Vietnamese</a>
                             <a class="dropdown-item py-1" href="#">Spanish</a>
                             <a class="dropdown-item py-1" href="#">Korean</a>
                             <a class="dropdown-item py-1" href="#">Chinese</a>
-                        </div>
-                    </div>
-                    <div class="dropdown">
-                        <button
-                            class="btn btn-link dropdown-toggle fw-semibold text-uppercase ls-1 p-0 dropdown-menu-end fs-13px"
-                            type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            USD
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end py-5" style="min-width: unset">
-                            <a class="dropdown-item py-1" href="#">EUR</a>
-                            <a class="dropdown-item py-1" href="#">GBP</a>
-                            <a class="dropdown-item py-1" href="#">JPY</a>
-                            <a class="dropdown-item py-1" href="#">AUD</a>
                         </div>
                     </div>
                 </div>
@@ -160,7 +148,7 @@
                                         <svg class="icon icon-magnifying-glass-light fs-5">
                                             <use xlink:href="#icon-magnifying-glass-light"></use>
                                         </svg>
-                                        <span class="fs-15px">Search</span>
+                                        <span class="fs-15px">Tìm kiếm</span>
                                     </a>
                                 </div>
                             </div>
@@ -171,23 +159,26 @@
                                 </li>
                                 <li class="nav-item transition-all-xl-1 py-xl-11 py-0 px-xxl-8 px-xl-6 dropdown dropdown-hover">
                                     <a class="nav-link d-flex justify-content-between position-relative py-xl-0 px-xl-0 text-uppercase fw-semibold ls-1 fs-15px fs-xl-14px dropdown-toggle"
-                                       href="#" data-bs-toggle="dropdown" id="menu-item-pages" aria-haspopup="true"
+                                       href="{{ route('product-category.list') }}"  id="menu-item-pages" aria-haspopup="true"
                                        aria-expanded="false">Sản phẩm</a>
                                     <ul class="dropdown-menu py-6" aria-labelledby="menu-item-pages">
                                         @foreach($categories as $category)
                                             <li class="dropend dropdown-hover" aria-haspopup="true"
                                                 aria-expanded="false">
                                                 <a class="dropdown-item pe-6 {{ $category->children->count() > 0 ? 'dropdown-toggle' : '' }}  d-flex justify-content-between border-hover"
-                                                   href="#" data-bs-toggle="dropdown" id="menu-item-contact-us">
+                                                   href="{{ route('product-category.list', $category->slug) }}"
+                                                   id="menu-item-contact-us">
                                                     <span class="border-hover-target">{{ $category->name }}</span>
                                                 </a>
                                                 @if($category->children->count() > 0)
-                                                    <ul class="dropdown-menu py-6" aria-labelledby="menu-item-contact-us"
+                                                    <ul class="dropdown-menu py-6"
+                                                        aria-labelledby="menu-item-contact-us"
                                                         data-bs-popper="none">
                                                         @foreach($category->children as $child)
                                                             <li>
                                                                 <a class="dropdown-item border-hover"
-                                                                   href="contact-us-01.html" previewlistener="true">
+                                                                   href="{{ route('product-category.list', $category->slug.'/'.$child->slug) }}"
+                                                                >
                                                                 <span
                                                                     class="border-hover-target">{{ $child->name }}</span>
                                                                 </a>
@@ -202,7 +193,7 @@
                             </ul>
                         </div>
                         <div class="px-10 d-none d-xl-flex align-items-center">
-                            <a href="http://du-an-poly.trihd.id.vn/" class="navbar-brand px-8 py-4 mx-auto"
+                            <a href="{{ route('home') }}" class="navbar-brand px-8 py-4 mx-auto"
                                previewlistener="true">
                                 <img class="light-mode-img" src="http://du-an-poly.trihd.id.vn/assets/client/logo.png"
                                      width="179" height="26" alt="Glowing - Bootstrap 5 HTML Templates">
@@ -240,8 +231,9 @@
                                 </div>
                                 @if(Auth::check())
                                     <div class="dropdown me-10">
-                                        <div  class="px-5 d-none d-xl-inline-block" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer">
-                                            <svg  class="icon icon-user-light">
+                                        <div class="px-5 d-none d-xl-inline-block" data-bs-toggle="dropdown"
+                                             aria-expanded="false" style="cursor: pointer">
+                                            <svg class="icon icon-user-light">
                                                 <use xlink:href="#icon-user-light"></use>
                                             </svg>
                                         </div>
@@ -249,9 +241,11 @@
                                             <a class="dropdown-item py-1" href="#">Thông tin cá nhân</a>
                                             <a class="dropdown-item py-1" href="#">Đơn hàng</a>
                                             @if(Auth::check() && Auth::user()->isAdmin())
-                                                <a class="dropdown-item py-1" href="{{ route('admin.dashboard') }}">Truy cập trang quản trị</a>
+                                                <a class="dropdown-item py-1" href="{{ route('admin.dashboard') }}">Truy
+                                                    cập trang quản trị</a>
                                             @endif
-                                            <a class="dropdown-item py-1" href="{{ route('auth.logout') }}">Đăng xuất</a>
+                                            <a class="dropdown-item py-1" href="{{ route('auth.logout') }}">Đăng
+                                                xuất</a>
                                         </div>
                                     </div>
                                 @else

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Category;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -33,11 +34,13 @@ class AppServiceProvider extends ServiceProvider
                 ->action('Verify Email Address', $url);
         });
 
-        View::composer('layouts._header', function ($view) {
+        View::composer(['layouts._header', 'components.modal.search'], function ($view) {
             $categories = Category::query()
                 ->where('parent_id', 0)
                 ->latest('id')->get();
             $view->with('categories', $categories);
         });
+
+        Paginator::useBootstrap();
     }
 }
