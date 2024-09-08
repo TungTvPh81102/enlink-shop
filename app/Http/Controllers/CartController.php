@@ -33,40 +33,44 @@ class CartController extends Controller
         try {
             DB::beginTransaction();
 
+            // Lưu sản phẩm vào giỏ hàng trong session
+            $cart = session('cart', []);
+
+            if (isset($cart[$productVariant->id])) {
+                $cart[$productVariant->id]['qty'] += $request->qty;
+            } else {
+                $cart[$productVariant->id] =
+                    $product->toArray() +
+                    $productVariant->toArray() +
+                    ['qty' => $request->qty];
+            }
+
+            session(['cart' => $cart]);
+
             if (Auth::check()) {
-                $userId = Auth::user()->id;
+                $userId = Auth::id();
+                $cart = session('cart', []);
 
-                $cart = Cart::firstOrCreate([
-                    'user_id' => $userId
-                ]);
+                // Cập nhật hoặc tạo giỏ hàng trong cơ sở dữ liệu
+                $dbCart = Cart::firstOrCreate(['user_id' => $userId]);
 
-                $cartDetail = CartDetail::query()
-                    ->where([
-                        'cart_id' => $cart->id,
+                // Chuyển đổi giỏ hàng từ session vào cơ sở dữ liệu
+                foreach ($cart as $key => $item) {
+                    $cartDetail = CartDetail::where([
+                        'cart_id' => $dbCart->id,
                         'product_variant_id' => $productVariant->id
                     ])->first();
 
-                if ($cartDetail) {
-                    $cartDetail->quantity += $request->qty;
-                    $cartDetail->save();
-                } else {
-                    CartDetail::create([
-                        'cart_id' => $cart->id,
-                        'product_variant_id' => $productVariant->id,
-                        'quantity' => $request->qty
-                    ]);
-                }
-                session()->forget('cart');
-            } else {
-                if (!isset(session('cart')[$productVariant->id])) {
-                    $data = $product->toArray()
-                        + $productVariant->toArray()
-                        + ['qty' => $request->qty];
-                    session()->put('cart.' . $productVariant->id, $data);
-                } else {
-                    $data = session('cart')[$productVariant->id];
-                    $data['qty'] += $request->qty;
-                    session()->put('cart.' . $productVariant->id, $data);
+                    if ($cartDetail) {
+                        $cartDetail->quantity += $item['qty'];
+                        $cartDetail->save();
+                    } else {
+                        CartDetail::create([
+                            'cart_id' => $dbCart->id,
+                            'product_variant_id' => $productVariant->id,
+                            'quantity' => $item['qty']
+                        ]);
+                    }
                 }
             }
 
@@ -86,10 +90,7 @@ class CartController extends Controller
 
     public function viewCart()
     {
-
         $title = 'Giỏ hàng';
-        $cartDetails = [];
-
         if (Auth::check()) {
             $userId = Auth::user()->id;
 
@@ -118,9 +119,17 @@ class CartController extends Controller
 
                 $cart = Cart::query()->where('user_id', $userId)->first();
                 if (!empty($cart)) {
-                    $cartItem = CartDetail::query()->where('id', $id)->first();
+                    $cartItem = CartDetail::query()
+                        ->where('id', $id)
+                        ->first();
                     if ($cartItem) {
                         $cartItem->delete();
+                        $sessionCart = session()->get('cart', []);
+                        if (isset($sessionCart[$cartItem->product_variant_id])) {
+                            unset($sessionCart[$cartItem->product_variant_id]);
+                            session()->put('cart', $sessionCart);
+                        }
+
                         return redirect()->back()->with('success', 'Xoá sản phẩm thành công');
                     } else {
                         return redirect()->back()->with('error', 'Sản phẩm không có trong giỏ hàng.');
