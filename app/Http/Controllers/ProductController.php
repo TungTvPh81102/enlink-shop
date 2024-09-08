@@ -93,6 +93,7 @@ class ProductController extends Controller
 
     public function showDetailProduct($slug)
     {
+//        session()->forget('cart');
         $product = Product::query()
             ->with(['variants', 'galleries', 'category.parent', 'brand'])
             ->where('products.slug', $slug)->firstOrFail();
@@ -115,6 +116,11 @@ class ProductController extends Controller
         $products = Product::query()
             ->with(['variants', 'brand', 'category.parent'])
             ->where('status', 'publish');
+
+        if (!empty($request->q)) {
+            $products = $products
+                ->where('name', 'like', '%' . $request->q . '%');
+        }
 
         if (!empty($request->sort_by)) {
             switch ($request->sort_by) {
@@ -166,6 +172,37 @@ class ProductController extends Controller
             'total' => $products->total(),
             'data' => view('product._shop', compact('products'))->render()
         ], 200);
+    }
+
+    public function searchProduct(Request $request)
+    {
+        $title = 'Tìm kiếm: ' . $request->q;
+
+        $categories = Category::query()->where('status', 1)
+            ->where('parent_id', 0)
+            ->get();
+
+        $brands = Brand::query()->where('status', 1)
+            ->get();
+
+        if (empty($request->q)) {
+            abort(404);
+        }
+
+        $products = Product::query()
+            ->with(['variants', 'brand', 'category.parent'])
+            ->where('name', 'like', '%' . $request->q . '%')
+            ->where('status', 'publish')
+            ->latest('id')->paginate(12);
+
+        $products = $products->appends(['q' => $request->q]);
+
+        return view('product.shop', compact([
+            'title',
+            'products',
+            'categories',
+            'brands'
+        ]));
     }
 
 }

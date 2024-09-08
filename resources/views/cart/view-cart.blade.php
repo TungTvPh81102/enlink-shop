@@ -28,12 +28,16 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @if(session()->has('cart'))
-                        @foreach(session('cart') as $item)
+                    @if(!empty($cartDetails))
+                        @php
+                            $total = 0;
+                        @endphp
+                        @foreach($cartDetails as $variantId => $item)
                             @php
-
-
-                                @endphp
+                                $discountedPrice =  $item['price_sale'] > 0 ? $item['price'] * (1 - ($item['price_sale'] / 100)) : $item['price'];
+                                $subTotal = $discountedPrice * $item['qty'];
+                                $total += $subTotal;
+                            @endphp
                             <tr class="position-relative">
                                 <th scope="row" class="pe-5 ps-8 py-7 shop-product">
                                     <div class="d-flex align-items-center">
@@ -49,7 +53,7 @@
                                                  alt="Natural Coconut Cleansing Oil">
                                         </div>
                                         <div>
-                                            <p class="fw-500 mb-1 text-body-emphasis">{{ $item['name'] }}</p>
+                                            <p class="fw-500 mb-1 text-body-emphasis">{{ Str::limit($item['name'], 50, '...') }}</p>
                                             <p class="card-text">
                                                 <span
                                                     class="fs-13px fw-bold text-body-emphasis ">Kích cỡ: {{ $item['size']['name'] }}</span>
@@ -58,9 +62,6 @@
                                             </p>
                                             <p class="card-text">
                                                 @if($item['price_sale'] > 0)
-                                                    @php
-                                                        $discountedPrice =  $item['price'] * (1 - ($item['price_sale'] / 100));
-                                                    @endphp
                                                     <span
                                                         class="fs-13px fw-500 text-decoration-line-through pe-3">{{ number_format($item['price']) }}đ</span>
                                                     <span class="fs-15px fw-bold text-body-emphasis">{{ number_format($discountedPrice) }}đ</span>
@@ -84,10 +85,11 @@
                                     </div>
                                 </td>
                                 <td class="align-middle">
-                                    <p class="mb-0 text-body-emphasis fw-bold mr-xl-11">$48.00</p>
+                                    <p class="mb-0 text-body-emphasis fw-bold mr-xl-11">{{ number_format($subTotal) }}</p>
                                 </td>
                                 <td class="align-middle text-end pe-8">
-                                    <a href="#" class="d-block text-secondary">
+                                    <a href="{{ route('cart.delete-cart', $variantId) }}"
+                                       class="d-block text-secondary ">
                                         <i class="fa fa-times"></i>
                                     </a>
                                 </td>
@@ -175,7 +177,8 @@
                         <div class="card-body px-9 pt-6">
                             <div class="d-flex align-items-center justify-content-between mb-5">
                                 <span>Subtotal:</span>
-                                <span class="d-block ml-auto text-body-emphasis fw-bold">$99.00</span>
+                                <span
+                                    class="d-block ml-auto text-body-emphasis fw-bold">{{ isset($total) ? number_format($total) : '0' }}  </span>
                             </div>
                             <div class="d-flex align-items-center justify-content-between">
                                 <span>Shipping:</span>
@@ -187,7 +190,7 @@
                                 <span class="text-secondary text-body-emphasis">Total pricre:</span>
                                 <span class="d-block ml-auto text-body-emphasis fs-4 fw-bold">$99.00</span>
                             </div>
-                            <a href="checkout.html"
+                            <a href="{{ route('checkout.show-form-checkout') }}"
                                class="btn w-100 btn-dark btn-hover-bg-primary btn-hover-border-primary"
                                title="Check Out">Check Out</a>
                         </div>

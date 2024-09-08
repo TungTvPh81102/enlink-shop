@@ -155,7 +155,6 @@ class BrandController extends Controller
         $brand = Brand::query()->findOrFail($id);
 
         try {
-
             DB::transaction(function () use ($brand) {
                 $brand->status = 0;
                 $brand->save();

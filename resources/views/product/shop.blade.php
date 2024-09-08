@@ -18,9 +18,17 @@
                         @if(!empty($parentCategory))
                             <li class="breadcrumb-item " aria-current="page">{{ $parentCategory->name }}</li>
                             <li class="breadcrumb-item active" aria-current="page">{{ $subCategory->name }}</li>
-                        @else
+                        @elseif(!empty($category))
                             <li class="breadcrumb-item active"
-                                aria-current="page">{{ $category->name ?? 'Cửa hàng' }}</li>
+                                aria-current="page">{{ $category->name  }}</li>
+                        @else
+                            <li class="breadcrumb-item active" aria-current="page">
+                                @if(request('q'))
+                                    Tìm kiếm
+                                @else
+                                    Cửa hàng
+                                @endif
+                            </li>
                         @endif
                     </ol>
                 </nav>
@@ -30,19 +38,30 @@
             <div class="container">
                 @if(!empty($parentCategory))
                     <h2 class="mb-0">{{ $subCategory->name }}</h2>
+                @elseif(!empty($category))
+                    <h2 class="mb-0">{{ $category->name   }}</h2>
                 @else
+                    <h2 class="mb-0">
+                        @if(request('query'))
+                            Kết quả tìm kiếm: {{ request('q') }}
+                        @else
+                            Cửa hàng
+                        @endif
+                    </h2>
+                @endif
             </div>
-            <h2 class="mb-0">{{ $category->name ?? 'Cửa hàng'  }}</h2>
-            @endif
+
         </div>
     </section>
     <section class="container container-xxl">
         <div class="tool-bar mb-11 align-items-center justify-content-between d-lg-flex">
             <div class="tool-bar-left mb-6 mb-lg-0 fs-18px">Có <span
-                    class="text-body-emphasis fw-semibold" id="getQuantityProduct">{{ count($products) }}</span> sản phẩm dành cho bạn
+                    class="text-body-emphasis fw-semibold" id="getQuantityProduct">{{ count($products) }}</span> sản
+                phẩm dành cho bạn
             </div>
             <form id="fillterForm" action="" method="post">
                 @csrf
+                <input type="hidden" name="q" id="q" value="{{ request('q') ?? '' }}">
                 <input type="hidden" name="brand_id" id="brand_id">
                 <input type="hidden" name="color_id" id="color_id">
                 <input type="hidden" name="sort_by" id="sort_by">
@@ -79,7 +98,7 @@
                                 <ul class="navbar-nav navbar-nav-cate" id="widget_product_category">
                                     @foreach($categories as $category)
                                         <li class="nav-item">
-                                            <a href="#"
+                                            <a href="{{ $category->children->count() == 0 ? route('product-category.list', $category->slug) : 'javascript:void(0);' }}"
                                                title="Skin care"
                                                class="text-reset position-relative d-block text-decoration-none text-body-emphasis-hover d-flex align-items-center text-uppercase fs-14px fw-semibold letter-spacing-5 active">
                                                 <span class="text-hover-underline me-2">{{ $category->name }}</span>
@@ -88,13 +107,13 @@
                                                           data-bs-target="#cat_skin-care-{{ $category->id }}"
                                                           class="caret flex-grow-1 d-flex align-items-center justify-content-end collapsed"><svg
                                                             class="icon"><use xlink:href="#icon-plus"></use></svg>
-                                            </span>
+                                                    </span>
                                                 @endif
                                             </a>
                                             <div id="cat_skin-care-{{ $category->id }}" class="collapse show"
                                                  data-bs-parent="#cat_skin-care">
                                                 <ul class="navbar-nav nav-submenu ps-8">
-                                                    @foreach($category ->children as $child)
+                                                    @foreach($category -> children as $child)
                                                         <li class="nav-item">
                                                             <a class="text-reset position-relative d-block text-decoration-none text-body-emphasis-hover d-flex align-items-center"
                                                                href="{{ route('product-category.list', $category->slug . '/' . $child->slug) }}"><span
@@ -109,25 +128,29 @@
                             @endif
 
                         </div>
-                        <div class="widget widget-product-hightlight">
-                            <h4 class="widget-title fs-5 mb-6">Thương hiệu</h4>
-                            <ul class="navbar-nav navbar-nav-cate" id="widget_product_hightlight">
-                                @foreach($brands as $item)
-                                    <li class="nav-item d-flex">
-                                        <input class="changeBrands" id="changeBrands-{{ $item->id }}" type="checkbox"
-                                               value="{{ $item->id }}">
-                                        <label style="cursor: pointer" for="changeBrands-{{ $item->id }}"
-                                               title="Best Seller"
-                                               class="text-reset position-relative d-block text-decoration-none text-body-emphasis-hover d-flex align-items-center">
+                        @if(!empty($brands))
+                            <div class="widget widget-product-hightlight">
+                                <h4 class="widget-title fs-5 mb-6">Thương hiệu</h4>
+                                <ul class="navbar-nav navbar-nav-cate" id="widget_product_hightlight">
+                                    @foreach($brands as $item)
+                                        <li class="nav-item d-flex">
+                                            <input class="changeBrands" id="changeBrands-{{ $item->id }}"
+                                                   type="checkbox"
+                                                   value="{{ $item->id }}">
+                                            <label style="cursor: pointer" for="changeBrands-{{ $item->id }}"
+                                                   title="Best Seller"
+                                                   class="text-reset position-relative d-block text-decoration-none text-body-emphasis-hover d-flex align-items-center">
                                             <span
                                                 style="margin-left: 10px"
                                                 class="text-hover-underline">
                                                 {{ $item->name }}</span>
-                                        </label>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
+                                            </label>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+
                         <div class="widget widget-product-price">
                             <h4 class="widget-title fs-5 mb-6">Giá</h4>
                             <ul class="navbar-nav navbar-nav-cate" id="widget_product_price">
