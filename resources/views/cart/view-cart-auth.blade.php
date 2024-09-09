@@ -19,8 +19,9 @@
     <section class="container">
         <div class="shopping-cart">
             <h2 class="text-center fs-2 mt-12 mb-13">{{ $title }}</h2>
-            <form class="table-responsive-md pb-8 pb-lg-10" method="POST">
+            <form action="{{ route('cart.update-cart') }}" class="table-responsive-md pb-8 pb-lg-10" method="POST">
                 @csrf
+                @method('PUT')
                 <table class="table border">
                     <thead class="bg-body-secondary">
                     <tr class="fs-15px letter-spacing-01 fw-semibold text-uppercase text-body-emphasis">
@@ -79,21 +80,28 @@
                                     </div>
                                 </th>
                                 <td class="align-middle">
+                                    <input name="quantity[{{ $item->product_variant_id }}][id]" type="hidden" value="{{ $item->product_variant_id }}">
                                     <div class="input-group position-relative shop-quantity">
                                         <a href="#" class="shop-down position-absolute z-index-2"><i
-                                                class="far fa-minus"></i></a>
-                                        <input name="quantity[{{ $item->id }}]" type="number"
+                                                class="far fa-minus"></i>
+                                        </a>
+                                        <input min="1" name="quantity[{{ $item->product_variant_id }}][qty]" type="number"
                                                class="form-control form-control-sm px-10 py-4 fs-6 text-center border-0"
                                                value="{{ $item->quantity }}" required>
+                                        @error('quantity.' . $item->id . '.qty')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
                                         <a href="#" class="shop-up position-absolute z-index-2"><i
-                                                class="far fa-plus"></i></a>
+                                                class="far fa-plus"></i>
+                                        </a>
                                     </div>
                                 </td>
                                 <td class="align-middle">
                                     <p class="mb-0 text-body-emphasis fw-bold mr-xl-11">{{  number_format($subTotal) }}</p>
                                 </td>
                                 <td class="align-middle text-end pe-8">
-                                    <a href="{{ route('cart.delete-cart', $item->product_variant_id) }}" class="d-block text-secondary">
+                                    <a href="{{ route('cart.delete-cart', $item->product_variant_id) }}"
+                                       class="d-block text-secondary">
                                         <i class="fa fa-times"></i>
                                     </a>
                                 </td>
@@ -123,62 +131,7 @@
                     </tbody>
                 </table>
             </form>
-            <div class="row pt-8 pt-lg-11 pb-16 pb-lg-18">
-                <div class="col-lg-4 pt-2">
-                    <h4 class="fs-24 mb-6">Coupon Discount</h4>
-                    <p class="mb-7">Enter your coupon code if you have one.</p>
-                    <form>
-                        <input type="text" class="form-control mb-7" placeholder="Enter coupon code here">
-                        <button type="submit" class="btn btn-dark btn-hover-bg-primary btn-hover-border-primary">
-                            Apply coupon
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Shipping Calculator Section -->
-                <div class="col-lg-4 pt-lg-2 pt-10">
-                    <h4 class="fs-24 mb-6">Shipping Calculator</h4>
-                    <form>
-                        <div class="d-flex mb-5">
-                            <div class="form-check me-6 me-lg-9">
-                                <input class="form-check-input form-check-input-body-emphasis" type="radio"
-                                       name="flexRadioDefault" id="flexRadioDefault1">
-                                <label class="form-check-label" for="flexRadioDefault1">
-                                    Free shipping
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input form-check-input-body-emphasis" type="radio"
-                                       name="flexRadioDefault" id="flexRadioDefault2" checked>
-                                <label class="form-check-label" for="flexRadioDefault2">
-                                    Flat rate: $75
-                                </label>
-                            </div>
-                        </div>
-                        <div class="dropdown bg-body-secondary rounded mb-7">
-                            <a href="#"
-                               class="form-select text-body-emphasis dropdown-toggle d-flex justify-content-between align-items-center text-decoration-none text-secondary position-relative d-block"
-                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Viet Nam
-                            </a>
-                            <div class="dropdown-menu w-100 px-0 py-4">
-                                <a class="dropdown-item px-6 py-4" href="#">Andorra</a>
-                                <a class="dropdown-item px-6 py-4" href="#">San Marino</a>
-                                <a class="dropdown-item px-6 py-4" href="#">Tunisia</a>
-                                <a class="dropdown-item px-6 py-4" href="#">Micronesia</a>
-                                <a class="dropdown-item px-6 py-4" href="#">Solomon Islands</a>
-                                <a class="dropdown-item px-6 py-4" href="#">Macedonia</a>
-                            </div>
-                        </div>
-                        <input type="text" class="form-control mb-7" placeholder="State / County" required>
-                        <input type="text" class="form-control mb-7" placeholder="City" required>
-                        <input type="text" class="form-control mb-7" placeholder="Postcode / Zip">
-                        <button type="submit" class="btn btn-dark btn-hover-bg-primary btn-hover-border-primary">
-                            Update total
-                        </button>
-                    </form>
-                </div>
-
+            <div class="row pt-8 pt-lg-11 pb-16 pb-lg-18 justify-content-end">
                 <div class="col-lg-4 pt-lg-0 pt-11">
                     <div class="card border-0" style="box-shadow: 0 0 10px 0 rgba(0,0,0,0.1)">
                         <div class="card-body px-9 pt-6">
