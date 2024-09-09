@@ -93,7 +93,7 @@
                                     <p class="mb-0 text-body-emphasis fw-bold mr-xl-11">{{  number_format($subTotal) }}</p>
                                 </td>
                                 <td class="align-middle text-end pe-8">
-                                    <a href="{{ route('cart.delete-cart', $item->id) }}" class="d-block text-secondary">
+                                    <a href="{{ route('cart.delete-cart', $item->product_variant_id) }}" class="d-block text-secondary">
                                         <i class="fa fa-times"></i>
                                     </a>
                                 </td>

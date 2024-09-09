@@ -226,7 +226,7 @@
                                         </svg>
                                         <span
                                             class="badge bg-dark text-white position-absolute top-0 start-100 translate-middle mt-4 rounded-circle fs-13px p-0 square"
-                                            style="--square-size: 18px">3</span>
+                                            style="--square-size: 18px">{{ session()->has('cart') ? count(session()->get('cart')) : 0  }}</span>
                                     </a>
                                 </div>
                                 @if(Auth::check())

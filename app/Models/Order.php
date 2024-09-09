@@ -15,10 +15,17 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
-        'product_id',
-        'quantity',
-        'total_price',
-        'status',
+        'user_name',
+        'user_email',
+        'user_phone',
+        'is_ship_user_same_user',
+        'ship_user_name',
+        'ship_user_email',
+        'ship_user_phone',
+        'payment_method',
+        'status_delivery',
+        'payment_status',
+        'total_price'
     ];
 
 }
