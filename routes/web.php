@@ -35,6 +35,7 @@ Route::prefix('cart')->as('cart.')->group(function () {
     Route::put('/update-cart', [\App\Http\Controllers\CartController::class, 'updateCart'])->name('update-cart');
     Route::get('/delete-cart/{id}', [\App\Http\Controllers\CartController::class, 'deleteCart'])
         ->name('delete-cart');
+    Route::delete('/clear-cart', [\App\Http\Controllers\CartController::class, 'clearCart'])->name('clear-cart');
 });
 
 Route::prefix('checkout')->as('checkout.')->group(function () {

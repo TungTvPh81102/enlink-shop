@@ -49,7 +49,17 @@
 </div>
 
 @include('layouts.scripts.scripts')
-
 @yield('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    @if($errors)
+        @foreach($errors->all() as $error)
+            @php
+                toastr()->error($error);
+            @endphp
+        @endforeach
+    @endif
+</script>
+
 </body>
 </html>

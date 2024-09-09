@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 
 class CartController extends Controller
 {
+    // [POST]: Xử lý thêm sản phẩm vào giỏ hàng
     public function addToCart(Request $request)
     {
         $request->validate([
@@ -73,6 +74,7 @@ class CartController extends Controller
         }
     }
 
+    // [GET]: Xem giỏ hàng
     public function viewCart()
     {
 //        session()->forget('cart');
@@ -93,6 +95,7 @@ class CartController extends Controller
         }
     }
 
+    // [PUT]: Cập nhật giỏ han
     public function updateCart(Request $request)
     {
         $request->validate([
@@ -138,6 +141,7 @@ class CartController extends Controller
         }
     }
 
+    // [DELETE]:  Xoá sản phẩm trong giỏ hàng
     public function deleteCart(string $id)
     {
         try {
@@ -180,6 +184,41 @@ class CartController extends Controller
             ]);
 
             return redirect()->back()->with('error', 'Có lỗi xảy ra, vui lòng thử lại sau');
+        }
+    }
+
+    // [DELETE]: Xoá toàn bộ giỏ hàng
+    public function clearCart()
+    {
+        try {
+            if (Auth::check()) {
+                $userId = Auth::id();
+                $cart = Cart::query()->where('user_id', $userId)->first();
+
+                if (!empty($cart)) {
+                    $cart->cartDetails()->delete();
+                } else {
+                    return response()->json([
+                        'message' => 'Không tìm thấy giỏ hangfF'
+                    ], 404);
+                }
+                session()->forget('cart');
+            }else {
+                session()->forget('cart');
+            }
+
+            return response()->json([
+                'message' => 'Xoá giỏ hàng thành công!'
+            ], 200);
+        } catch (\Exception $e) {
+            Log::error(__CLASS__ . '@' . __FUNCTION__, [
+                'exception-message' => $e,
+                'exception-code' => $e->getCode()
+            ]);
+
+            return response()->json([
+                'message' => 'Có lỗi xảy ra, vui lòng thử lại!'
+            ], 500);
         }
     }
 }
