@@ -80,12 +80,14 @@
                                     </div>
                                 </th>
                                 <td class="align-middle">
-                                    <input name="quantity[{{ $item->product_variant_id }}][id]" type="hidden" value="{{ $item->product_variant_id }}">
+                                    <input name="quantity[{{ $item->product_variant_id }}][id]" type="hidden"
+                                           value="{{ $item->product_variant_id }}">
                                     <div class="input-group position-relative shop-quantity">
                                         <a href="#" class="shop-down position-absolute z-index-2"><i
                                                 class="far fa-minus"></i>
                                         </a>
-                                        <input min="1" name="quantity[{{ $item->product_variant_id }}][qty]" type="number"
+                                        <input min="1" name="quantity[{{ $item->product_variant_id }}][qty]"
+                                               type="number"
                                                class="form-control form-control-sm px-10 py-4 fs-6 text-center border-0"
                                                value="{{ $item->quantity }}" required>
                                         @error('quantity.' . $item->id . '.qty')
@@ -113,7 +115,7 @@
                                    class="btn btn-outline-dark me-8 text-nowrap my-5">
                                     Tiếp tục mua sắm
                                 </a>
-                                <button type="submit" value="Clear Shopping Cart"
+                                <button id="clear-cart" type="button" value="Clear Shopping Cart"
                                         class="btn btn-link p-0 border-0 border-bottom border-secondary text-decoration-none rounded-0 my-5 fw-semibold ">
                                     <i class="fa fa-times me-3"></i>
                                     Xoá giỏ hàng
@@ -159,4 +161,53 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function () {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $('#clear-cart').on('click', function () {
+
+                Swal.fire({
+                    title: "Bạn có muốn xóa toàn bộ giỏ hàng ?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Đồng ý!!",
+                    cancelButtonText: "Huỷ!!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "DELETE",
+                            url: "{{ route('cart.clear-cart') }}",
+                            success: function (data) {
+                                console.log(data);
+                                Swal.fire({
+                                    title: data.message,
+                                    icon: 'success'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.reload();
+                                    } else if (data.status === 'error') {
+                                        Swal.fire({
+                                            title: data.message,
+                                            icon: 'error'
+                                        });
+                                    }
+                                });
+                            }, error: function (data) {
+                                console.log('Error:', data);
+                            }
+                        });
+                    }
+                });
+            })
+        });
+    </script>
 @endsection

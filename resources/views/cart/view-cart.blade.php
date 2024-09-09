@@ -104,7 +104,7 @@
                                    class="btn btn-outline-dark me-8 text-nowrap my-5">
                                     Tiếp tục mua sắm
                                 </a>
-                                <button type="submit" value="Clear Shopping Cart"
+                                <button id="clear-cart" type="button" value="Clear Shopping Cart"
                                         class="btn btn-link p-0 border-0 border-bottom border-secondary text-decoration-none rounded-0 my-5 fw-semibold ">
                                     <i class="fa fa-times me-3"></i>
                                     Xoá giỏ hàng
@@ -122,59 +122,7 @@
                     @endif
                 </table>
             </form>
-            <div class="row pt-8 pt-lg-11 pb-16 pb-lg-18">
-                <div class="col-lg-4 pt-2">
-                    <h4 class="fs-24 mb-6">Coupon Discount</h4>
-                    <p class="mb-7">Enter you coupon code if you have one.</p>
-                    <form>
-                        <input type="text" class="form-control mb-7" placeholder="Enter coupon code here">
-                        <button type="submit" class="btn btn-dark btn-hover-bg-primary btn-hover-border-primary">
-                            Apply coupon
-                        </button>
-                    </form>
-                </div>
-                <div class="col-lg-4 pt-lg-2 pt-10">
-                    <h4 class="fs-24 mb-6">Shipping Caculator</h4>
-                    <form>
-                        <div class="d-flex mb-5">
-                            <div class="form-check me-6 me-lg-9">
-                                <input class="form-check-input form-check-input-body-emphasis" type="radio"
-                                       name="flexRadioDefault" id="flexRadioDefault1">
-                                <label class="form-check-label" for="flexRadioDefault1">
-                                    Free shipping
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input form-check-input-body-emphasis" type="radio"
-                                       name="flexRadioDefault" id="flexRadioDefault2" checked>
-                                <label class="form-check-label" for="flexRadioDefault2">
-                                    Flat rate: $75
-                                </label>
-                            </div>
-                        </div>
-                        <div class="dropdown bg-body-secondary rounded mb-7">
-                            <a href="#"
-                               class="form-select text-body-emphasis dropdown-toggle d-flex justify-content-between align-items-center text-decoration-none text-secondary position-relative d-block"
-                               role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Viet Nam
-                            </a>
-                            <div class="dropdown-menu w-100 px-0 py-4">
-                                <a class="dropdown-item px-6 py-4" href="#">Andorra</a>
-                                <a class="dropdown-item px-6 py-4" href="#">San Marino</a>
-                                <a class="dropdown-item px-6 py-4" href="#">Tunisia</a>
-                                <a class="dropdown-item px-6 py-4" href="#">Micronesia</a>
-                                <a class="dropdown-item px-6 py-4" href="#">Solomon Islands</a>
-                                <a class="dropdown-item px-6 py-4" href="#">Macedonia</a>
-                            </div>
-                        </div>
-                        <input type="text" class="form-control mb-7" placeholder="State / County" required>
-                        <input type="text" class="form-control mb-7" placeholder="City" required>
-                        <input type="text" class="form-control mb-7" placeholder="Postcode / Zip">
-                        <button type="submit" class="btn btn-dark btn-hover-bg-primary btn-hover-border-primary">
-                            Update total
-                        </button>
-                    </form>
-                </div>
+            <div class="row pt-8 pt-lg-11 pb-16 pb-lg-18 justify-content-end">
                 <div class="col-lg-4 pt-lg-0 pt-11">
                     <div class="card border-0" style="box-shadow: 0 0 10px 0 rgba(0,0,0,0.1)">
                         <div class="card-body px-9 pt-6">
@@ -202,4 +150,53 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function () {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $('#clear-cart').on('click', function () {
+
+                Swal.fire({
+                    title: "Bạn có muốn xóa toàn bộ giỏ hàng ?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Đồng ý!!",
+                    cancelButtonText: "Huỷ!!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "DELETE",
+                            url: "{{ route('cart.clear-cart') }}",
+                            success: function (data) {
+                                console.log(data);
+                                Swal.fire({
+                                    title: data.message,
+                                    icon: 'success'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.reload();
+                                    } else if (data.status === 'error') {
+                                        Swal.fire({
+                                            title: data.message,
+                                            icon: 'error'
+                                        });
+                                    }
+                                });
+                            }, error: function (data) {
+                                console.log('Error:', data);
+                            }
+                        });
+                    }
+                });
+            })
+        });
+    </script>
 @endsection
