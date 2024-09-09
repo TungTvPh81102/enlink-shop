@@ -95,7 +95,47 @@ class CartController extends Controller
 
     public function updateCart(Request $request)
     {
-        dd($request->all());
+        $request->validate([
+            'quantity' => 'required|min:1'
+        ]);
+
+        try {
+            if (Auth::check()) {
+                $userId = Auth::id();
+                $cart = Cart::query()->where('user_id', $userId)->first();
+                if (!empty($cart)) {
+                    foreach ($request->quantity as $key => $item) {
+                        $cartItem = CartDetail::query()
+                            ->where('cart_id', $cart->id)
+                            ->where('product_variant_id', $key)
+                            ->first();
+                        if ($cartItem) {
+                            $cartItem->update(['quantity' => $item['qty']]);
+                        }
+                    }
+                }
+            } else {
+                $carts = session()->get('cart', []);
+                foreach ($carts as $key => $item) {
+                    if (isset($request->quantity[$key])) {
+                        $quantity = $request->quantity[$key]['qty'];
+                        $carts[$key]['qty'] = $quantity;
+                    } else {
+                        unset($carts[$key]);
+                    }
+                }
+                session()->put('cart', $carts);
+            }
+
+            return redirect()->back()->with('success', 'Cập nhật giỏ hàng thành công.');
+        } catch (\Exception $e) {
+            Log::error(__CLASS__ . '@' . __FUNCTION__, [
+                'exception-message' => $e,
+                'request_data' => $request->all()
+            ]);
+
+            return redirect()->back()->with('error', 'Có lỗi xảy ra, vui lòng thử lại.');
+        }
     }
 
     public function deleteCart(string $id)

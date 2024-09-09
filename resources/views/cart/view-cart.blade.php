@@ -18,7 +18,9 @@
     <section class="container">
         <div class="shopping-cart">
             <h2 class="text-center fs-2 mt-12 mb-13">{{ $title }}</h2>
-            <form class="table-responsive-md pb-8 pb-lg-10">
+            <form action="{{ route('cart.update-cart') }}" method="post" class="table-responsive-md pb-8 pb-lg-10">
+                @csrf
+                @method('PUT')
                 <table class="table border">
                     <thead class="bg-body-secondary">
                     <tr class="fs-15px letter-spacing-01 fw-semibold text-uppercase text-body-emphasis">
@@ -73,10 +75,11 @@
                                     </div>
                                 </th>
                                 <td class="align-middle">
+                                        <input name="quantity[{{ $variantId }}][id]" type="hidden" value="{{ $variantId }}">
                                     <div class="input-group position-relative shop-quantity">
                                         <a href="#" class="shop-down position-absolute z-index-2"><i
                                                 class="far fa-minus"></i></a>
-                                        <input name="quantity[]" type="number"
+                                        <input min="1" name="quantity[{{ $variantId }}][qty]" type="number"
                                                class="form-control form-control-sm px-10 py-4 fs-6 text-center border-0"
                                                value="{{ $item['qty'] }}" required>
                                         <a href="#" class="shop-up position-absolute z-index-2"><i
