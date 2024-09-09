@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->foreignIdFor(\App\Models\Province::class)->constrained();
             $table->foreignIdFor(\App\Models\District::class)->constrained();
             $table->foreignIdFor(\App\Models\Ward::class)->constrained();
-            $table->string('street-address')->nullable();
+            $table->string('street_address')->nullable();
             $table->timestamps();
         });
     }

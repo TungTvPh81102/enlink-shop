@@ -57,7 +57,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <input type="text" class="form-control mb-6" value="{{ Auth::user()->name ?? '' }}"
-                                           id="last-name" name="name"
+                                           id="last-name" name="user_name"
                                            placeholder="Họ và tên" required>
                                     @error('name')
                                          <span class="text-danger">{{ $message }}</span>
@@ -71,7 +71,7 @@
                                     <label for="street-address"
                                            class="mb-5 fs-13px letter-spacing-01 fw-semibold text-uppercase">Email</label>
                                     <input type="text" class="form-control mb-6" value="{{ Auth::user()->email ?? '' }}"
-                                           id="street-address" name="email"
+                                           id="street-address" name="user_email"
                                            required>
                                     @error('email')
                                          <span class="text-danger">{{ $message }}</span>
@@ -81,7 +81,7 @@
                                     <label for="apt" class="mb-5 fs-13px letter-spacing-01 fw-semibold text-uppercase">Số
                                         điện thoại</label>
                                     <input type="text" class="form-control mb-6" value="{{ Auth::user()->phone ?? '' }}"
-                                           id="phone" name="phone" required>
+                                           id="phone" name="user_phone" required>
                                     @error('phone')
                                          <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -95,7 +95,7 @@
                                 <select id="province_id" name="province_id" class="form-control mb-6">
                                     <option>Chọn Tỉnh/Thành Phố</option>
                                     @foreach($provinces as $item)
-                                        <option value="{{ $item->id }}}">{{ $item->name }}</option>
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('province_id')
@@ -132,13 +132,13 @@
                                            class="mb-5 fs-13px letter-spacing-01 fw-semibold text-uppercase">Ghi
                                         chú</label>
                                     <textarea placeholder="Nhập ghi chú" class="form-control" id="street-address"
-                                              name="street-address"></textarea>
+                                              name="street_address">{{ old('street_address') }}</textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="mt-6 mb-5 form-check">
                             <input type="checkbox" class="form-check-input rounded-0 me-4" name="is_ship_user_same_user"
-                                   id="customCheck5" value="1">
+                                   id="customCheck5" value="1" checked>
                             <label class="text-body-emphasis" for="customCheck5">
                                 <span class="text-body-emphasis">Địa chỉ thanh toán giống với địa chỉ giao hàng.</span>
                             </label>
@@ -154,7 +154,7 @@
                                         <use xlink:href="#icon-paylay"></use>
                                     </svg>
                                     <span class="ms-3 text-body-emphasis fw-semibold fs-6">Thanh toán online</span>
-                                    <input type="radio" name="payment-method" id="payment-online" value="online">
+                                    <input type="radio" name="payment_method" id="payment-online" value="online">
                                 </label>
 
                                 <!-- Thanh toán khi nhận hàng -->
@@ -164,7 +164,7 @@
                                     </svg>
                                     <span
                                         class="ms-3 text-body-emphasis fw-semibold fs-6">Thanh toán khi nhận hàng</span>
-                                    <input type="radio" name="payment-method" id="payment-code" value="cod" checked>
+                                    <input type="radio" name="payment_method" id="payment-code" value="cod" checked>
                                 </label>
 
                                 @error('payment-method')

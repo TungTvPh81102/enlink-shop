@@ -24,7 +24,7 @@ return new class extends Migration {
                 ->default(\App\Models\Order::PAYMENT_METHOD_COD);
             $table->boolean('status_delivery')->default(1);
             $table->boolean('payment_status')->default(0);
-            $table->string('status');
+            $table->double('total_price');
             $table->timestamps();
         });
     }
