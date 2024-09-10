@@ -21,4 +21,13 @@ class OrderDetail extends Model
         'variant_size_name',
         'variant_color_name',
     ];
+    public function product_variant()
+    {
+        return $this->belongsTo(ProductVariant::class);
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

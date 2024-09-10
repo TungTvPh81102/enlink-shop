@@ -95,7 +95,6 @@ class CheckoutController extends Controller
                         'payment_status' => 0,
                         'total_price' => $totalPrice,
                     ];
-
                 }
 
                 $orders = Order::create($dataOrder);

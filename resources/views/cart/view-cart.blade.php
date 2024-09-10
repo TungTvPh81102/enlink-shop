@@ -18,6 +18,7 @@
     <section class="container">
         <div class="shopping-cart">
             <h2 class="text-center fs-2 mt-12 mb-13">{{ $title }}</h2>
+            @if(!empty($cartDetails))
             <form action="{{ route('cart.update-cart') }}" method="post" class="table-responsive-md pb-8 pb-lg-10">
                 @csrf
                 @method('PUT')
@@ -30,7 +31,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @if(!empty($cartDetails))
                         @php
                             $total = 0;
                         @endphp
@@ -117,9 +117,6 @@
                             </td>
                         </tr>
                     </tbody>
-                    @else
-                        <p class="text-center">Không có sản phẩm nào trong giỏ hàng</p>
-                    @endif
                 </table>
             </form>
             <div class="row pt-8 pt-lg-11 pb-16 pb-lg-18 justify-content-end">
@@ -150,6 +147,9 @@
             </div>
         </div>
     </section>
+    @else
+        <p class="text-center mb-13">Không có sản phẩm nào trong giỏ hàng</p>
+    @endif
 @endsection
 
 @section('scripts')

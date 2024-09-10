@@ -19,6 +19,7 @@
     <section class="container">
         <div class="shopping-cart">
             <h2 class="text-center fs-2 mt-12 mb-13">{{ $title }}</h2>
+            @if(count($cartDetails) > 0)
             <form action="{{ route('cart.update-cart') }}" class="table-responsive-md pb-8 pb-lg-10" method="POST">
                 @csrf
                 @method('PUT')
@@ -31,7 +32,6 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @if(count($cartDetails) > 0)
                         @php
                             $total = 0;
                         @endphp
@@ -127,9 +127,6 @@
                                 </button>
                             </td>
                         </tr>
-                    @else
-                        <p class="text-center">Không có sản phẩm nào trong giỏ hàng</p>
-                    @endif
                     </tbody>
                 </table>
             </form>
@@ -154,13 +151,16 @@
                             </div>
                             <a href="{{ route('checkout.show-form-checkout') }}"
                                class="btn w-100 btn-dark btn-hover-bg-primary btn-hover-border-primary"
-                               title="Check Out">Check Out</a>
+                               title="Check Out">Thanh toán</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    @else
+        <p class="text-center mb-13">Không có sản phẩm nào trong giỏ hàng</p>
+    @endif
 @endsection
 
 @section('scripts')

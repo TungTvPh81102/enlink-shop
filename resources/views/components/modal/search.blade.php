@@ -13,7 +13,7 @@
             >
                 <a href="{{ route('home') }}" class="navbar-brand py-4 d-lg-inline-block">
                     <img
-                        src="assets/images/others/logo.png"
+                        src="http://du-an-poly.trihd.id.vn/assets/client/logo.png"
                         height="26"
                         alt="Glowing - Bootstrap 5 HTML Templates"
                     />

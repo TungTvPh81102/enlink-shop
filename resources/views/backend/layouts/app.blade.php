@@ -119,6 +119,11 @@
                         },
                         error: function (data) {
                             console.log('Error:', data);
+                            Swal.fire({
+                                title: "Thao tác thất bại!",
+                                text: data.responseJSON.message,
+                                icon: 'error'
+                            });
                         }
                     });
                 }
