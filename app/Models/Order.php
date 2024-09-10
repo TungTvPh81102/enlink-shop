@@ -28,4 +28,12 @@ class Order extends Model
         'total_price'
     ];
 
+    public function address()
+    {
+        return $this->hasOne(Addresse::class);
+    }
+
+    public function order_details() {
+        return $this->hasMany(OrderDetail::class);
+    }
 }

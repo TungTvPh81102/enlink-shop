@@ -105,23 +105,12 @@
                 </ul>
             </li>
             <li class="nav-item dropdown">
-                <a class="dropdown-toggle" href="javascript:void(0);">
+                <a href="{{ route('admin.orders.index') }}">
                                 <span class="icon-holder">
                                     <i class="bx bx-data"></i>
                                 </span>
                     <span class="title">Quản lý đơn hàng</span>
-                    <span class="arrow">
-                                    <i class="arrow-icon"></i>
-                                </span>
                 </a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a href="{{ route('admin.sizes.index') }}">Size</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.colors.index') }}">Color</a>
-                    </li>
-                </ul>
             </li>
             <li class="nav-item dropdown">
                 <a class="dropdown-toggle" href="javascript:void(0);">
@@ -203,23 +192,12 @@
                 </ul>
             </li>
             <li class="nav-item dropdown">
-                <a class="dropdown-toggle" href="javascript:void(0);">
+                <a href="{{ route('admin.roles.index') }}">
                                 <span class="icon-holder">
                                            <i class="bx bx-user-circle"></i>
                                 </span>
                     <span class="title">Phân quyền</span>
-                    <span class="arrow">
-                                    <i class="arrow-icon"></i>
-                                </span>
                 </a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a href="{{ route('admin.roles.index') }}">Danh sách</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.roles.index') }}">Thêm mới</a>
-                    </li>
-                </ul>
             </li>
             <li class="nav-item dropdown">
                 <a href="{{ route('home') }}">

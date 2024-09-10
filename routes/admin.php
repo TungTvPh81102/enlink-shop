@@ -149,4 +149,21 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::delete('/{user}', [\App\Http\Controllers\Backend\UserController::class, 'destroy'])
             ->name('destroy');
     });
+
+    // ROUTE ORDERS
+    Route::prefix('orders')->as('orders.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Backend\OrderController::class, 'index'])
+            ->name('index');
+        Route::get('/{id}/edit', [\App\Http\Controllers\Backend\OrderController::class, 'edit'])
+            ->name('edit');
+        Route::put('/{order}', [\App\Http\Controllers\Backend\OrderController::class, 'update'])
+            ->name('update');
+        Route::delete('/order-item/{id}', [\App\Http\Controllers\Backend\OrderController::class, 'orderItemDelete'])
+            ->name('order-item.delete');
+    });
 });
+
+Route::get('/districts/{province_id}', [\App\Http\Controllers\LocationController::class, 'getDistricts'])
+    ->name('get-districts');
+Route::get('/wards/{districts_id}', [\App\Http\Controllers\LocationController::class, 'getWards'])
+    ->name('get-wards');
