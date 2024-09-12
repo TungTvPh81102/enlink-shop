@@ -152,44 +152,21 @@
                 </ul>
             </li>
             <li class="nav-item dropdown">
-                <a class="dropdown-toggle" href="javascript:void(0);">
+                <a  href="{{ route('admin.banners.index') }}">
                                 <span class="icon-holder">
                                     <i class="bx bx-image"></i>
                                 </span>
                     <span class="title">Quản lý banner</span>
-                    <span class="arrow">
-                                    <i class="arrow-icon"></i>
-                                </span>
                 </a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a href="{{ route('admin.sizes.index') }}">Size</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.colors.index') }}">Color</a>
-                    </li>
-                </ul>
             </li>
 
             <li class="nav-item dropdown">
-                <a class="dropdown-toggle" href="javascript:void(0);">
+                <a  href="{{ route('admin.settings.index') }}">
                                 <span class="icon-holder">
                                     <i class="bx bx-cog bx-spin"></i>
                                 </span>
                     <span class="title">Quản lý cài đặt</span>
-
-                    <span class="arrow">
-                                    <i class="arrow-icon"></i>
-                                </span>
                 </a>
-                <ul class="dropdown-menu">
-                    <li>
-                        <a href="{{ route('admin.sizes.index') }}">Size</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.colors.index') }}">Color</a>
-                    </li>
-                </ul>
             </li>
             <li class="nav-item dropdown">
                 <a href="{{ route('admin.roles.index') }}">

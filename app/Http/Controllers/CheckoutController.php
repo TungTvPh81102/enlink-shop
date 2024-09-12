@@ -95,6 +95,20 @@ class CheckoutController extends Controller
                         'payment_status' => 0,
                         'total_price' => $totalPrice,
                     ];
+                }else {
+                    $dataOrder = [
+                        'user_id' => $user->id,
+                        'user_name' => $user->name,
+                        'user_email' => $user->email,
+                        'user_phone' => $user->phone,
+                        'ship_user_name' => $request->user_name,
+                        'ship_user_email' => $request->user_email,
+                        'ship_user_phone' => $request->user_phone,
+                        'payment_method' => $request->payment_method,
+                        'is_ship_user_same_user' => 0,
+                        'payment_status' => 0,
+                        'total_price' => $totalPrice,
+                    ];
                 }
 
                 $orders = Order::create($dataOrder);

@@ -161,6 +161,28 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::delete('/order-item/{id}', [\App\Http\Controllers\Backend\OrderController::class, 'orderItemDelete'])
             ->name('order-item.delete');
     });
+
+    // ROUTE SETTINGS
+    Route::prefix('settings')->as('settings.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Backend\SettingController::class, 'index'])
+            ->name('index');
+        Route::put('/', [\App\Http\Controllers\Backend\SettingController::class, 'update'])
+            ->name('update');
+    });
+
+    // ROUTE BANNERS
+    Route::prefix('banners')->as('banners.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Backend\BannerController::class, 'index'])
+            ->name('index');
+        Route::get('/create', [\App\Http\Controllers\Backend\BannerController::class, 'create'])
+            ->name('create');
+        Route::post('/', [\App\Http\Controllers\Backend\BannerController::class, 'store'])
+            ->name('store');
+        Route::get('/{id}/edit', [\App\Http\Controllers\Backend\BannerController::class, 'edit'])
+            ->name('edit');
+        Route::put('/{banner}', [\App\Http\Controllers\Backend\BannerController::class, 'update'])
+            ->name('update');
+    });
 });
 
 Route::get('/districts/{province_id}', [\App\Http\Controllers\LocationController::class, 'getDistricts'])
