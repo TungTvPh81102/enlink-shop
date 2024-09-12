@@ -44,6 +44,7 @@
             background: #32841f;
 
         }
+
         .orderstatus:before {
             content: '';
             height: 100%;
@@ -66,9 +67,11 @@
             .orderstatus {
                 text-align: left;
             }
+
             .orderstatus:before {
                 left: 0;
             }
+
             .orderstatus .orderstatus-text {
                 left: 0;
                 width: 100%;
@@ -172,61 +175,84 @@
         <form action="{{ route('admin.orders.update', $order->id) }}" method="post" enctype="multipart/form-data">
             @csrf
             @method('PUT')
-            @if($order->is_ship_user_same_user == 1)
+            <div class="card">
+                <div class="card-body">
+                    <h4> {{ $order->is_ship_user_same_user ? 'Thông tin khách hàng' : 'Thông tin người đặt hàng' }}  </h4>
+                    <div class="row mt-4">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="formGroupExampleInput">Tên khách hàng</label>
+                                <input type="text" name="user_name" class="form-control mb-3"
+                                       id="formGroupExampleInput"
+                                       placeholder="Tên khách hàng"
+                                       value="{{ old('user_name', $order->user_name) }}">
+                                @error('user_name')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="formGroupExampleInput2">Email</label>
+                                <input type="text" name="user_email" class="form-control mb-3"
+                                       id="formGroupExampleInput2"
+                                       placeholder="Email" value="{{ old('user_email',$order->user_email) }}">
+                                @error('user_email')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="formGroupExampleInput">Số điện thoại</label>
+                                <input type="text" name="user_phone" class="form-control mb-3"
+                                       placeholder="Số điện thoại"
+                                       value="{{ old('user_phone', $order->user_phone) }}">
+                                @error('user_phone')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            @if($order->is_ship_user_same_user !== 1)
                 <div class="card">
                     <div class="card-body">
-                        <h4>Thông tin khách hàng</h4>
+                        <h4>Thông tin người nhận hàng</h4>
                         <div class="row mt-4">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="formGroupExampleInput">Tên khách hàng</label>
-                                    <input type="text" name="user_name" class="form-control mb-3"
+                                    <input type="text" name="ship_user_name" class="form-control mb-3"
                                            id="formGroupExampleInput"
-                                           placeholder="Tên khách hàng"
-                                           value="{{ old('user_name', $order->user_name) }}">
-                                    @error('user_name')
+                                           placeholder="Tên người nhận hàng"
+                                           value="{{ old('ship_user_name', $order->ship_user_name) }}">
+                                    @error('ship_user_name')
                                     <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="formGroupExampleInput2">Email</label>
-                                    <input type="text" name="user_email" class="form-control mb-3"
+                                    <input type="text" name="ship_user_email" class="form-control mb-3"
                                            id="formGroupExampleInput2"
-                                           placeholder="Email" value="{{ old('user_email',$order->user_email) }}">
-                                    @error('user_email')
+                                           placeholder="Email"
+                                           value="{{ old('ship_user_email',$order->ship_user_email) }}">
+                                    @error('ship_user_email')
                                     <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="formGroupExampleInput">Số điện thoại</label>
-                                    <input type="text" name="user_phone" class="form-control mb-3"
-                                           placeholder="Số điện thoại"
-                                           value="{{ old('user_phone', $order->user_phone) }}">
-                                    @error('user_phone')
-                                    <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="formGroupExampleInput">Phương thức thanh toán</label>
-                                    <select name="payment_method" id="" class="form-control mb-3">
-                                        <option
-                                            {{ old('payment_method', $order->payment_method) == 'cod' ? 'selected' : '' }} value="">
-                                            Thanh toán COD
-                                        </option>
-                                        <option
-                                            {{ old('payment_method', $order->payment_method) == 'online' ? 'selected' : '' }} value="">
-                                            Thanh toán Online
-                                        </option>
-                                    </select>
-                                    @error('payment_method')
+                                    <input type="text" name="ship_user_phone" class="form-control mb-3"
+                                           placeholder="Số điện thoại người nhận"
+                                           value="{{ old('ship_user_phone', $order->ship_user_phone) }}">
+                                    @error('ship_user_phone')
                                     <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
@@ -234,73 +260,73 @@
                         </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-body">
-                        <h4>Địa chỉ nhận hàng</h4>
-                        <div class="row mt-4">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="formGroupExampleInput">Tỉnh/Thành phố</label>
-                                    <select id="province_id" name="province_id" id="" class="form-control mb-3">
-                                        <option>Chọn Tỉnh/Thành phố</option>
-                                        @foreach($provinces as $item)
-                                            <option
-                                                {{ old('province_id', $order->address->province_id) == $item->id ? 'selected' : '' }} value="{{ $item->id }}">
-                                                {{ $item->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('province_id')
-                                    <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="formGroupExampleInput">Quận/Huyện</label>
-                                    <select id="district_id" name="district_id" id="" class="form-control mb-3">
-                                        <option>Chọn Quận/Huyện</option>
-                                        @foreach($districts as $item)
-                                            <option
-                                                {{ old('district_id', $order->address->district_id) == $item->id ? 'selected' : '' }} value="{{ $item->id }}">
-                                                {{ $item->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('district_id')
-                                    <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="formGroupExampleInput">Quận/Huyện</label>
-                                    <select id="ward_id" name="ward_id" id="" class="form-control mb-3">
-                                        <option>Chọn Quận/Huyện</option>
-                                        @foreach($wards as $item)
-                                            <option
-                                                {{ old('ward_id', $order->address->ward_id) == $item->id ? 'selected' : '' }} value="{{ $item->id }}">
-                                                {{ $item->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('ward_id')
-                                    <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <label for="formGroupExampleInput">Ghi chú</label>
-                                    <textarea name="street_address"
-                                              class="form-control">{{ old('street_address', $order->address->street_address) }}</textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @else
-                <h4>Thông tin người đặt</h4>
-                <h4>Thông tin người nhận hàng</h4>
             @endif
+            <div class="card">
+                <div class="card-body">
+                    <h4>Địa chỉ nhận hàng</h4>
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="formGroupExampleInput">Tỉnh/Thành phố</label>
+                                <select id="province_id" name="province_id" id="" class="form-control mb-3">
+                                    <option>Chọn Tỉnh/Thành phố</option>
+                                    @foreach($provinces as $item)
+                                        <option
+                                            {{ old('province_id', $order->address->province_id) == $item->id ? 'selected' : '' }} value="{{ $item->id }}">
+                                            {{ $item->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('province_id')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="formGroupExampleInput">Quận/Huyện</label>
+                                <select id="district_id" name="district_id" id="" class="form-control mb-3">
+                                    <option>Chọn Quận/Huyện</option>
+                                    @foreach($districts as $item)
+                                        <option
+                                            {{ old('district_id', $order->address->district_id) == $item->id ? 'selected' : '' }} value="{{ $item->id }}">
+                                            {{ $item->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('district_id')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="formGroupExampleInput">Quận/Huyện</label>
+                                <select id="ward_id" name="ward_id" id="" class="form-control mb-3">
+                                    <option>Chọn Quận/Huyện</option>
+                                    @foreach($wards as $item)
+                                        <option
+                                            {{ old('ward_id', $order->address->ward_id) == $item->id ? 'selected' : '' }} value="{{ $item->id }}">
+                                            {{ $item->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('ward_id')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="form-group">
+                                <label for="formGroupExampleInput">Ghi chú</label>
+                                <textarea name="street_address"
+                                          class="form-control">{{ old('street_address', $order->address->street_address) }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between">
                         <h4>Thông tin sản phẩm</h4>
+                        <div style="cursor: pointer" class="btn btn-primary add-product-order"  data-toggle="modal" data-target="#modelProductOrder">
+                            <i class="anticon anticon-plus"></i>
+                        </div>
                     </div>
                     <div class="form-group mb-3 mt-3">
                         <div class="table-responsive">
@@ -347,7 +373,8 @@
                                         <td>{{ number_format($item->product_price_regular) }}</td>
                                         <td>
                                             <input style="width: 80px; text-align: center" min="1" type="number"
-                                                   name="quantity[]" class="form-control" value="{{ $item->quantity }}">
+                                                   name="quantity[{{ $item->product_variant_id }}][qty]"
+                                                   class="form-control" value="{{ $item->quantity }}">
                                         </td>
                                         <td>{{ number_format($subTotal) }}</td>
                                         <td>
@@ -369,12 +396,55 @@
             </div>
             <div class="card">
                 <div class="card-body">
+                    <h4>Thanh toán</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="formGroupExampleInput">Phương thức thanh toán</label>
+                                <select name="payment_method" id="" class="form-control mb-3">
+                                    <option
+                                        {{ old('payment_method', $order->payment_method) == 'cod' ? 'selected' : '' }} value="cod">
+                                        Thanh toán COD
+                                    </option>
+                                    <option
+                                        {{ old('payment_method', $order->payment_method) == 'online' ? 'selected' : '' }} value="online">
+                                        Thanh toán Online
+                                    </option>
+                                </select>
+                                @error('payment_method')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="formGroupExampleInput">Trạng thái thanh toán</label>
+                                <select name="payment_status" id="" class="form-control mb-3">
+                                    <option
+                                        {{ old('payment_status', $order->payment_status)  ? 'selected' : '' }} value="1">
+                                        Đã thanh toán
+                                    </option>
+                                    <option
+                                        {{ old('payment_status', !$order->payment_status) ? 'selected' : '' }} value="0">
+                                        Chưa thanh toán
+                                    </option>
+                                </select>
+                                @error('payment_status')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
                     <h4>Trạng thái đơn hàng</h4>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="formGroupExampleInput2">Trạng thái</label>
-                                <select name="status_delivery"  id="status_delivery" class="form-control mb-3">
+                                <select name="status_delivery" id="status_delivery" class="form-control mb-3">
                                     @switch($order->status_delivery)
                                         @case(1)
                                             <option
@@ -442,42 +512,42 @@
                             <label for="formGroupExampleInput2">Thông tin</label>
                             <div id="status-info" class="status-info">
                             </div>
-{{--                            <section>--}}
-{{--                                <div class="row orderstatus-container">--}}
-{{--                                    <div class="medium-12 columns">--}}
-{{--                                        <div class="orderstatus">--}}
-{{--                                            <div class="orderstatus-check"><span class="orderstatus-number">4</span></div>--}}
-{{--                                            <div class="orderstatus-text">--}}
-{{--                                                <time>17 Aug</time>--}}
-{{--                                                <p>Your order is delivered</p>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                        <div class="orderstatus done">--}}
-{{--                                            <div class="orderstatus-check"><span class="orderstatus-number">3</span></div>--}}
-{{--                                            <div class="orderstatus-text">--}}
-{{--                                                <time>17 Dec</time>--}}
-{{--                                                <p>Order created</p>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                        <div class="orderstatus done">--}}
-{{--                                            <div class="orderstatus-check"><span class="orderstatus-number">2</span></div>--}}
-{{--                                            <div class="orderstatus-text">--}}
-{{--                                                <time>17 Dec</time>--}}
-{{--                                                <p>Your order is placed</p>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                        <div class="orderstatus done">--}}
-{{--                                            <div class="orderstatus-check"><span class="orderstatus-number">1</span></div>--}}
-{{--                                            <div class="orderstatus-text">--}}
-{{--                                                <time>17 Dec</time>--}}
-{{--                                                <p>Your order is placed</p>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
+                            {{--                            <section>--}}
+                            {{--                                <div class="row orderstatus-container">--}}
+                            {{--                                    <div class="medium-12 columns">--}}
+                            {{--                                        <div class="orderstatus">--}}
+                            {{--                                            <div class="orderstatus-check"><span class="orderstatus-number">4</span></div>--}}
+                            {{--                                            <div class="orderstatus-text">--}}
+                            {{--                                                <time>17 Aug</time>--}}
+                            {{--                                                <p>Your order is delivered</p>--}}
+                            {{--                                            </div>--}}
+                            {{--                                        </div>--}}
+                            {{--                                        <div class="orderstatus done">--}}
+                            {{--                                            <div class="orderstatus-check"><span class="orderstatus-number">3</span></div>--}}
+                            {{--                                            <div class="orderstatus-text">--}}
+                            {{--                                                <time>17 Dec</time>--}}
+                            {{--                                                <p>Order created</p>--}}
+                            {{--                                            </div>--}}
+                            {{--                                        </div>--}}
+                            {{--                                        <div class="orderstatus done">--}}
+                            {{--                                            <div class="orderstatus-check"><span class="orderstatus-number">2</span></div>--}}
+                            {{--                                            <div class="orderstatus-text">--}}
+                            {{--                                                <time>17 Dec</time>--}}
+                            {{--                                                <p>Your order is placed</p>--}}
+                            {{--                                            </div>--}}
+                            {{--                                        </div>--}}
+                            {{--                                        <div class="orderstatus done">--}}
+                            {{--                                            <div class="orderstatus-check"><span class="orderstatus-number">1</span></div>--}}
+                            {{--                                            <div class="orderstatus-text">--}}
+                            {{--                                                <time>17 Dec</time>--}}
+                            {{--                                                <p>Your order is placed</p>--}}
+                            {{--                                            </div>--}}
+                            {{--                                        </div>--}}
 
 
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </section>--}}
+                            {{--                                    </div>--}}
+                            {{--                                </div>--}}
+                            {{--                            </section>--}}
                         </div>
                     </div>
                 </div>
@@ -487,9 +557,56 @@
                 <a href="{{ route('admin.orders.index') }}" class="btn btn-secondary">Danh sách</a>
             </div>
         </form>
-
     </div>
+    <div class="modal fade" id="modelProductOrder">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Thêm sản phẩm cho đơn hàng</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="product_id">Sản phẩm</label>
+                        <select id="product_id" name="product_id" class="form-control">
+                            <option value="">-- Chọn sản phẩm --</option>
+                            @foreach($products as $item)
+                                <option value="{{ $item->id }}">{{ Str::limit($item->name,30) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="size_id">Kích cỡ</label>
+                        <select id="size_id" name="size_id" class="form-control">
+                            <option value="">-- Chọn kích cỡ --</option>
 
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="color_id">Màu </label>
+                        <select id="color_id" name="color_id" class="form-control">
+                            <option value="">-- Chọn màu --</option>
+
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Giá</label>
+                        <input id="price" type="text" name="price" class="form-control" placeholder="Chọn sản phẩm...">
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Số lượng</label>
+                        <input type="number" id="quantity" name="quantity" class="form-control" value="1">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Huỷ</button>
+                    <button type="button" class="btn btn-primary">Thêm vào đơn hàng</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('script')
     <script>
@@ -524,38 +641,113 @@
             statusInfoElement.innerHTML = statusHTML;
         });
 
-        $('#province_id').on('change', function () {
-            let provinceId = $(this).val();
-            if (provinceId) {
-                $.ajax({
-                    url: '{{ route('get-districts', '') }}' + '/' + provinceId,
-                    type: "GET",
-                    dataType: "json",
-                    success: function (res) {
-                        $('#district_id').empty().append('<option>Chọn quận/huyện</option>');
-                        $.each(res.data, function (key, value) {
-                            $('#district_id').append('<option value="' + value.id + '">' + value.name + '</option>');
-                        });
-                    }
-                });
-            }
-        });
+        $(document).ready(function () {
+            $('#province_id').on('change', function () {
+                let provinceId = $(this).val();
+                if (provinceId) {
+                    $.ajax({
+                        url: '{{ route('get-districts', '') }}' + '/' + provinceId,
+                        type: "GET",
+                        dataType: "json",
+                        success: function (res) {
+                            $('#district_id').empty().append('<option>Chọn quận/huyện</option>');
+                            $.each(res.data, function (key, value) {
+                                $('#district_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            });
+                        }
+                    });
+                }
+            });
 
-        $('#district_id').on('change', function () {
-            let districtId = $(this).val();
-            if (districtId) {
-                $.ajax({
-                    url: '{{ route('get-wards', '') }}' + '/' + districtId,
-                    type: "GET",
-                    dataType: "json",
-                    success: function (res) {
-                        $('#ward_id').empty().append('<option>Chọn phường/xã</option>');
-                        $.each(res.data, function (key, value) {
-                            $('#ward_id').append('<option value="' + value.id + '">' + value.name + '</option>');
-                        });
-                    }
-                });
-            }
-        });
+            $('#district_id').on('change', function () {
+                let districtId = $(this).val();
+                if (districtId) {
+                    $.ajax({
+                        url: '{{ route('get-wards', '') }}' + '/' + districtId,
+                        type: "GET",
+                        dataType: "json",
+                        success: function (res) {
+                            $('#ward_id').empty().append('<option>Chọn phường/xã</option>');
+                            $.each(res.data, function (key, value) {
+                                $('#ward_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+                            });
+                        }
+                    });
+                }
+            });
+
+
+            $('#product_id').on('change', function () {
+                let productId = $(this).val();
+                if (productId) {
+                    $.ajax({
+                        url: '{{ route('product-variants.show', '') }}' + '/' + productId,
+                        type: "GET",
+                        dataType: "json",
+                        success: function (res) {
+                            let sizes = res.data.variants;
+                            let seenSizes = new Set(); // Tập hợp để lưu các kích cỡ đã thấy
+
+                            $('#size_id').empty();
+                            $('#size_id').append('<option value="">-- Chọn kích cỡ --</option>');
+
+                            $.each(sizes, function (key, value) {
+                                // Chỉ thêm kích cỡ nếu chưa có trong tập hợp
+                                if (!seenSizes.has(value.size.name)) {
+                                    seenSizes.add(value.size.name); // Thêm kích cỡ vào tập hợp
+                                    $('#size_id').append('<option value="' + value.size.id + '">' + value.size.name + '</option>');
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+
+            $('#size_id').on('change', function () {
+                let sizeId = $(this).val();
+                let productId = $('#product_id').val();
+
+                if (sizeId && productId) {
+                    $.ajax({
+                        url: '{{ route("color-variants.show", ["product_id" => "product_id_placeholder", "size_id" => "size_id_placeholder"]) }}'
+                            .replace('product_id_placeholder', productId)
+                            .replace('size_id_placeholder', sizeId),
+                        type: "GET",
+                        dataType: "json",
+                        success: function (res) {
+                            $('#color_id').empty();
+                            $('#color_id').append('<option value="">-- Chọn màu --</option>');
+                            $.each(res.data, function (key, value) {
+                                $('#color_id').append('<option value="' + value.color.id + '">' + value.color.name + '</option>');
+                                $('#price').val('');
+                            });
+                        }
+                    });
+                }
+            });
+
+            $('#color_id').on('change', function () {
+                let colorId = $(this).val();
+                let sizeId = $('#size_id').val();
+                let productId = $('#product_id').val();
+
+                if (colorId && sizeId && productId) {
+                    $.ajax({
+                        url: '{{ route("color-variants.show", ["product_id" => "product_id_placeholder", "size_id" => "size_id_placeholder"]) }}'
+                            .replace('product_id_placeholder', productId)
+                            .replace('size_id_placeholder', sizeId),
+                        type: "GET",
+                        dataType: "json",
+                        success: function (res) {
+                            let selectedColor = res.data.find(color => color.color.id == colorId);
+                            if (selectedColor) {
+                                $('#price').val(selectedColor.price);
+                            }
+                        }
+                    });
+                }
+            });
+
+        })
     </script>
 @endsection
