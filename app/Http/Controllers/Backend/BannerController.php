@@ -128,6 +128,7 @@ class BannerController extends Controller
             'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'link' => 'required|max:255',
             'btn_title' => 'required|max:255',
+            'type' => 'required|in:slider,incentive,small',
             'status' => 'required|in:0,1',
         ]);
     }

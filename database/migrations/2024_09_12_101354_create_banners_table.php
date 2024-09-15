@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->string('link')->nullable();
             $table->string('btn_title')->nullable();
+            $table->enum('type', [\App\Models\Banner::TYPE_SLIDER, \App\Models\Banner::TYPE_INCENTIVE, \App\Models\Banner::TYPE_SMALL])
+                ->default(\App\Models\Banner::TYPE_SLIDER);
             $table->boolean('status')->default(1);
             $table->timestamps();
         });

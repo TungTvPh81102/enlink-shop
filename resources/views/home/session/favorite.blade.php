@@ -1,4 +1,4 @@
-<section class="container container-xxl pt-lg-18 pt-15">
+<section class="container container-xxl ">
     <div class="mb-12 pb-3 text-center" data-animate="fadeInUp">
         <h2 class="mb-5">Customer Favorite Beauty Essentials</h2>
         <p class="fs-18px mb-0 mw-xl-30 mw-lg-50 mw-md-75 ms-auto me-auto">
@@ -14,8 +14,7 @@
             <div class="card border-0 rounded-0 hover-zoom-in hover-shine">
                 <img
                     class="lazy-image w-100 img-fluid card-img object-fit-cover banner-02"
-                    src="#"
-                    data-src="./assets/images/banner/banner-34.jpg"
+                    src="{{ Storage::url($incentive[1]->image) }}"
                     width="570"
                     height="913"
                     alt="Pamper Your Skin"
@@ -29,10 +28,10 @@
                         Get the Glow
                     </h5>
                     <h3 class="card-title mb-0 fs-2 text-white">
-                        Pamper Your Skin
+                       {{ $incentive[1]->title }}
                     </h3>
                     <div class="mt-10 pt-2">
-                        <a href="#" class="btn btn-white">Explore More</a>
+                        <a href="{{ $incentive[1]->link }}" class="btn btn-white">{{ $incentive[1]->btn_title }}</a>
                     </div>
                 </div>
             </div>

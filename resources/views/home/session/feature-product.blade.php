@@ -9,7 +9,7 @@
                     <div class="card border-0 rounded-0 hover-zoom-in hover-shine">
                         <img
                             class="lazy-image w-100 img-fluid card-img object-fit-cover banner-02"
-                            src="{{ asset('assets/frontend/assets/images/products/product-03-75x100.jpg') }}"
+                            src="{{ Storage::url($incentive[0]->image) }}"
                             width="570"
                             height="913"
                             alt="Empower Yourself"
@@ -23,10 +23,10 @@
                                 Essenstial Items
                             </h5>
                             <h3 class="card-title mb-0 fs-2 text-white">
-                                Empower Yourself
+                                {{ $incentive[0]->title }}
                             </h3>
                             <div class="mt-10 pt-2">
-                                <a href="#" class="btn btn-white">Explore More</a>
+                                <a href="{{ $incentive[0]->link }}" class="btn btn-white">{{ $incentive[0]   ->btn_title }}</a>
                             </div>
                         </div>
                     </div>

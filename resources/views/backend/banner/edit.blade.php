@@ -66,6 +66,18 @@
                         @enderror
                     </div>
                     <div class="form-group">
+                        <label for="formGroupExampleInput2">Kiểu</label>
+                        <select name="type" id="" class="form-control mb-3">
+                            <option value="">--- Chọn ---</option>
+                            <option {{ old('type',$banner->type) == 'slider' ? 'selected' : ''  }} value="slider">Slider</option>
+                            <option {{ old('type',$banner->type) == 'incentive' ? 'selected' : '' }} value="incentive">Incentive</option>
+                            <option {{ old('type',$banner->type) == 'small' ? 'selected' : '' }} value="small">Small</option>
+                        </select>
+                        @error('type')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group">
                         <label for="formGroupExampleInput2">Trạng thái</label>
                         <select name="status" id="" class="form-control mb-3">
                             <option value="">--- Chọn ---</option>
