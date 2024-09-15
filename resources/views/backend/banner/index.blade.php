@@ -61,6 +61,7 @@
                             <th>ID</th>
                             <th>Hình ảnh</th>
                             <th>Tiêu đề</th>
+                            <th>Kiểu</th>
                             <th>Trạng thái</th>
                             <th>Ngày tạo</th>
                             <th>Ngày cập nhât</th>
@@ -81,13 +82,24 @@
                                 </td>
                                 <td>
                                     <h6 class="m-b-0 m-l-10">
-                                        <img class=" rounded" style="width: 200px; height: 100px"
+                                        <img class=" rounded" style="width: 160px; height: 100px; object-fit: cover"
                                              src="{{ Storage::url($item->image)  }}" alt=" {{ $item->name }}">
                                     </h6>
                                 </td>
                                 <td>
-                                    {{ $item->title }}
+                                    {{ Str::limit($item->title, 20) }}
                                 </td>
+                                <td>
+                                    @switch($item->type)
+                                        @case('slider')
+                                            <span class="badge badge-primary">Slider</span>
+                                            @break
+                                        @case('incentive')
+                                            <span class="badge badge-info">Incentive</span>
+                                            @break
+                                        @default
+                                            <span class="badge badge-info">Small</span>
+                                @endswitch
                                 <td>
                                     {!!   $item->status ?
                                         '<span class="badge badge-success">Hoạt động</span>' :
