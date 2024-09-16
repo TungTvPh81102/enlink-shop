@@ -8,6 +8,7 @@ use App\Models\District;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use App\Models\Province;
 use App\Models\Ward;
 use Illuminate\Http\Request;
@@ -31,7 +32,7 @@ class OrderController extends Controller
     public function edit(string $id)
     {
         $order = Order::query()
-            ->with('address', 'order_details')
+            ->with('address', 'order_details', 'order_coupons')
             ->findOrFail($id);
 
         $title = 'Quản lý đơn hàng';
@@ -39,7 +40,7 @@ class OrderController extends Controller
 
         $products = Product::query()
             ->with('variants')
-            ->where('status','publish')
+            ->where('status', 'publish')
             ->latest('id')
             ->get();
 
@@ -67,6 +68,8 @@ class OrderController extends Controller
         try {
             DB::beginTransaction();
 
+            $coupon = $order->order_coupons()->first();
+
             $dataOrder = $request->except('quantity', 'province_id', 'district_id', 'ward_id', 'street_address');
 
             $dataAddress = $request->only([
@@ -81,6 +84,7 @@ class OrderController extends Controller
             $order->address()->update($dataAddress);
 
             if (!empty($request->quantity)) {
+                $orderTotalPrice = 0;
                 foreach ($request->quantity as $key => $value) {
                     $orderDetail = OrderDetail::query()->where([
                         'order_id' => $order->id,
@@ -94,12 +98,33 @@ class OrderController extends Controller
                             'quantity' => $newQuantity
                         ]);
 
-                        $priceDifference = $orderDetail->product_price_regular * ($newQuantity - $oldQuantity);
-                        $order->total_price += $priceDifference;
-                        $order->save();
+                        $productVariant = ProductVariant::query()->findOrFail($key);
+                        $quantityDifference = $newQuantity - $oldQuantity;
+                        if ($quantityDifference > 0) {
+                            if ($productVariant->quantity >= $quantityDifference) {
+                                $productVariant->decrement('quantity', $quantityDifference);
+                            } else {
+                                throw new \Exception("Không còn hàng trong kho: {$productVariant->name}");
+                            }
+                        } else {
+                            $productVariant->increment('quantity',$newQuantity);
+                        }
+
+                        $priceDifference = $orderDetail->product_price_regular * $newQuantity;
+                        $orderTotalPrice += $priceDifference;
                     }
                 }
+
+                if ($coupon) {
+                    $discountPercentage = $coupon->reduce;
+                    $order->total_price = $orderTotalPrice - $discountPercentage;
+                } else {
+                    $order->total_price = $orderTotalPrice;
+                }
+
+                $order->save();
             }
+
 
             DB::commit();
 
