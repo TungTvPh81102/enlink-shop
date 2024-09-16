@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
                 ->action('Verify Email Address', $url);
         });
 
-        View::composer(['layouts._header', 'components.modal.search'], function ($view) {
+        View::composer(['layouts._app'], function ($view) {
             $categories = Category::query()
                 ->where('parent_id', 0)
                 ->latest('id')->get();

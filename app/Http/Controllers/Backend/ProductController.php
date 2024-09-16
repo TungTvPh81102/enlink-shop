@@ -118,14 +118,6 @@ class ProductController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
@@ -170,10 +162,18 @@ class ProductController extends Controller
             $product->update($dataProduct);
 
             if (!empty($dataProductVariants)) {
-                ProductVariant::query()->where('product_id', $product->id)->delete();
                 foreach ($dataProductVariants as $item) {
-                    $item['product_id'] = $product->id;
-                    ProductVariant::create($item);
+                    $variant = ProductVariant::where('product_id', $product->id)
+                        ->where('size_id', $item['size_id'])
+                        ->where('color_id', $item['color_id'])
+                        ->first();
+
+                    if ($variant) {
+                        $variant->update($item);
+                    } else {
+                        $item['product_id'] = $product->id;
+                        ProductVariant::create($item);
+                    }
                 }
             }
 
@@ -414,14 +414,12 @@ class ProductController extends Controller
 
                 if ($existingVariant) {
                     $existingVariant->update([
-                        'price' => $value['price'],
                         'quantity' => $value['quantity']
                     ]);
                 } else {
                     $dataProductVariants[] = [
                         'size_id' => $sizeId,
                         'color_id' => $colorId,
-                        'price' => $value['price'],
                         'quantity' => $value['quantity']
                     ];
                 }

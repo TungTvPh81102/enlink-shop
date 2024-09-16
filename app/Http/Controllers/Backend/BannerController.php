@@ -125,7 +125,7 @@ class BannerController extends Controller
         $request->validate([
             'title' => 'required',
             'subtitle' => 'nullable|max:255',
-            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
             'link' => 'required|max:255',
             'btn_title' => 'required|max:255',
             'type' => 'required|in:slider,incentive,small',

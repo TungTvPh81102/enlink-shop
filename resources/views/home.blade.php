@@ -7,96 +7,44 @@
 
     @include('home.session.favorite')
 
-    <section  class="py-lg-20 py-15">
-        <div class="container-fluid px-9">
-            <div class="row gy-30px gx-30px">
-                <div class="col-12 col-md-4" data-animate="fadeInUp">
-                    <div class="card border-0 rounded-0 hover-zoom-in hover-shine">
-                        <img
-                            class="lazy-image card-img object-fit-cover lazy-image"
-                            src="#"
-                            data-src="./assets/images/banner/banner-28.jpg"
-                            width="468"
-                            height="468"
-                            alt="Autumn Skincare"
-                        />
-                        <div
-                            class="card-img-overlay d-inline-flex flex-column p-8 justify-content-end text-center"
-                        >
-                            <h3 class="card-title text-white lh-45px">Autumn Skincare</h3>
-                            <div>
-                                <a
-                                    href="#"
-                                    class="btn btn-link p-0 fw-semibold text-white text-decoration-none"
-                                >Disvover Now
-                                    <svg class="icon">
-                                        <use xlink:href="#icon-arrow-right"></use>
-                                    </svg
-                                    >
-                                </a>
+    @if(!empty($smallSlider))
+        <section class="py-lg-20 py-15">
+            <div class="container-fluid px-9">
+                <div class="row gy-30px gx-30px">
+                    @foreach($smallSlider as $item)
+                        <div class="col-12 col-md-4" data-animate="fadeInUp">
+                            <div class="card border-0 rounded-0 hover-zoom-in hover-shine">
+                                <img
+                                    class="lazy-image card-img object-fit-cover lazy-image"
+                                    src="{{ Storage::url($item->image) }}"
+                                    width="468"
+                                    height="468"
+                                    alt="Autumn Skincare"
+                                />
+                                <div
+                                    class="card-img-overlay d-inline-flex flex-column p-8 justify-content-end text-center"
+                                >
+                                    <h3 class="card-title text-white lh-45px">{{ $item->title }}</h3>
+                                    <div>
+                                        <a
+                                            href="{{ route('product-category.list') }}"
+                                            class="btn btn-link p-0 fw-semibold text-white text-decoration-none"
+                                        >
+                                            {{ $item->btn_title }}
+                                            <svg class="icon">
+                                                <use xlink:href="#icon-arrow-right"></use>
+                                            </svg
+                                            >
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-4" data-animate="fadeInUp">
-                    <div class="card border-0 rounded-0 hover-zoom-in hover-shine">
-                        <img
-                            class="lazy-image card-img object-fit-cover lazy-image"
-                            src="#"
-                            data-src="./assets/images/banner/banner-26.jpg"
-                            width="468"
-                            height="468"
-                            alt="Sale 40% Off"
-                        />
-                        <div
-                            class="card-img-overlay d-inline-flex flex-column p-8 justify-content-end text-center"
-                        >
-                            <h3 class="card-title text-white lh-45px">Sale 40% Off</h3>
-                            <div>
-                                <a
-                                    href="#"
-                                    class="btn btn-link p-0 fw-semibold text-white text-decoration-none"
-                                >Shop Sale
-                                    <svg class="icon">
-                                        <use xlink:href="#icon-arrow-right"></use>
-                                    </svg
-                                    >
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-4" data-animate="fadeInUp">
-                    <div class="card border-0 rounded-0 hover-zoom-in hover-shine">
-                        <img
-                            class="lazy-image card-img object-fit-cover lazy-image"
-                            src="#"
-                            data-src="./assets/images/banner/banner-27.jpg"
-                            width="468"
-                            height="468"
-                            alt="Save on Sets"
-                        />
-                        <div
-                            class="card-img-overlay d-inline-flex flex-column p-8 justify-content-end text-center"
-                        >
-                            <h3 class="card-title text-white lh-45px">Save on Sets</h3>
-                            <div>
-                                <a
-                                    href="#"
-                                    class="btn btn-link p-0 fw-semibold text-white text-decoration-none"
-                                >Disvover Now
-                                    <svg class="icon">
-                                        <use xlink:href="#icon-arrow-right"></use>
-                                    </svg
-                                    >
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
 
     @if(!empty($galleries))
         <section class="bg-section-2 pb-lg-18 pb-16 pt-lg-17 pt-15 mb-4">

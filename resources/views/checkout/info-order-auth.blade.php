@@ -11,8 +11,8 @@
                         $variant = $item->productVariant ?? null;
                         $product = $variant ? $variant->product : null;
                         $discountedPrice = $product->price_sale > 0
-                            ? $variant->price * (1 - ($product->price_sale / 100))
-                            : $variant->price;
+                            ? $product->price_regular * (1 - ($product->price_sale / 100))
+                            : $product->price_regular;
                         $subTotal = $discountedPrice * $item->quantity;
                         $total += $subTotal;
                     @endphp
@@ -47,17 +47,38 @@
         <div class="card-body px-10 py-8">
             <div class="d-flex align-items-center mb-2">
                 <span>Tạm tính:</span>
-                <span class="d-block ms-auto text-body-emphasis fw-bold">{{ isset($total) ? number_format($total) : '0' }}</span>
+                <span
+                    class="d-block ms-auto text-body-emphasis fw-bold">{{ isset($total) ? number_format($total) : '0' }}đ</span>
             </div>
+            @if(session()->has('coupon'))
+                <div class="d-flex align-items-center">
+                    <span>Giảm giá:</span>
+                    <span class="d-block ms-auto text-body-emphasis fw-bold">
+                        -{{ number_format(session()->get('coupon')['reduce']) }}đ
+                    </span>
+                </div>
+            @endif
             <div class="d-flex align-items-center">
                 <span>Vận chuyển:</span>
-                <span class="d-block ms-auto text-body-emphasis fw-bold">0</span>
+                <span class="d-block ms-auto text-body-emphasis fw-bold">Free</span>
             </div>
         </div>
         <div class="card-footer bg-transparent py-5 px-0 mx-10">
             <div class="d-flex align-items-center fw-bold mb-6">
                 <span class="text-body-emphasis p-0">Tổng thanh toán:</span>
-                <span class="d-block ms-auto text-body-emphasis fs-4 fw-bold">{{ isset($total) ? number_format($total) : '0' }}</span>
+                @if(session()->has('coupon'))
+                    @php
+                        $finalTotal = $total - session()->get('coupon')['reduce'];
+                    @endphp
+                    <span id="final_total"
+                          class="d-block ms-auto text-body-emphasis fs-4 fw-bold">{{ number_format($finalTotal)  }}đ</span>
+                    <input type="hidden" name="total_price" value="{{ $finalTotal }}">
+                @else
+                    <span id="final_total"
+                          class="d-block ms-auto text-body-emphasis fs-4 fw-bold">{{ isset($total) ? number_format($total) : '0' }}đ</span>
+                    <input type="hidden" name="total_price" value="{{ $total }}">
+                @endif
+
             </div>
         </div>
     </div>

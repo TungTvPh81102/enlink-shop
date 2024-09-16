@@ -23,4 +23,14 @@ class Coupon extends Model
         'max_uses',
         'expire_date',
     ];
+
+
+    protected function checkCoupon($code) {
+        return $this->where('code', $code)
+            ->where('status', 1)
+            ->where('expire_date', '>=', date('Y-m-d'))
+            ->where('max_uses', '>=', 1)
+            ->first();
+    }
+
 }

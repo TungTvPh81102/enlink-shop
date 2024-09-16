@@ -48,49 +48,56 @@
                     </div>
                     <div class="form-group ">
                         <label for="formGroupExampleInput">Footer description</label>
-                        <textarea class="form-control" name="footer_description">{{ old('footer_description', $settings['footer_description'] ?? '') }}</textarea>
+                        <textarea class="form-control"
+                                  name="footer_description">{{ old('footer_description', $settings['footer_description'] ?? '') }}</textarea>
                         @error('footer_description')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group ">
-                        <label for="formGroupExampleInput">Icon Facebook</label>
-                        <input type="text" class="form-control" name="icon_facebook" value="{{ old('icon_facebook', $settings['icon_facebook'] ?? '') }}">
-                        @error('icon_facebook')
+                        <label for="formGroupExampleInput">Url Facebook</label>
+                        <input type="text" class="form-control" name="url_facebook"
+                               value="{{ old('url_facebook', $settings['url_facebook'] ?? '') }}">
+                        @error('url_facebook')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group ">
-                        <label for="formGroupExampleInput">Icon Instagram</label>
-                        <input type="text" class="form-control" name="icon_instagram" value="{{ old('icon_instagram', $settings['icon_instagram'] ?? '') }}">
-                        @error('icon_instagram')
+                        <label for="formGroupExampleInput">Url Instagram</label>
+                        <input type="text" class="form-control" name="icon_instagram"
+                               value="{{ old('url_instagram', $settings['url_instagram'] ?? '') }}">
+                        @error('url_instagram')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group ">
-                        <label for="formGroupExampleInput">Icon Youtube</label>
-                        <input type="text" class="form-control" name="icon_youtube" value="{{ old('icon_youtube', $settings['icon_youtube'] ?? '') }}">
-                        @error('icon_youtube')
+                        <label for="formGroupExampleInput">Url Youtube</label>
+                        <input type="text" class="form-control" name="url_youtube"
+                               value="{{ old('url_youtube', $settings['url_youtube'] ?? '') }}">
+                        @error('url_youtube')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group ">
                         <label for="formGroupExampleInput">Địa chỉ</label>
-                        <input type="text" class="form-control" name="address" value="{{ old('address', $settings['address'] ?? '') }}">
+                        <input type="text" class="form-control" name="address"
+                               value="{{ old('address', $settings['address'] ?? '') }}">
                         @error('address')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group ">
                         <label for="formGroupExampleInput">Số điện thoại</label>
-                        <input type="text" class="form-control" name="phone" value="{{ old('phone', $settings['phone'] ?? '') }}">
+                        <input type="text" class="form-control mb-3" name="phone"
+                               value="{{ old('phone', $settings['phone'] ?? '') }}">
                         @error('phone')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
                     <div class="form-group ">
                         <label for="formGroupExampleInput">Email</label>
-                        <input type="email" class="form-control" name="email" value="{{ old('email', $settings['email'] ?? '') }}">
+                        <input type="email" class="form-control mb-3" name="email"
+                               value="{{ old('email', $settings['email'] ?? '') }}">
                         @error('email')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror

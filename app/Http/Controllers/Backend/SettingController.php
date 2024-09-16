@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -68,6 +69,8 @@ class SettingController extends Controller
             }
 
             Storage::put($jsonFilePath, json_encode($updatedSettings, JSON_PRETTY_PRINT));
+
+            Cache::forget('settings');
 
             return redirect()->back()->with('success', 'Cập nhật thành công');
         } catch (\Exception $e) {

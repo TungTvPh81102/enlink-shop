@@ -36,6 +36,8 @@ Route::prefix('cart')->as('cart.')->group(function () {
     Route::get('/delete-cart/{id}', [\App\Http\Controllers\CartController::class, 'deleteCart'])
         ->name('delete-cart');
     Route::delete('/clear-cart', [\App\Http\Controllers\CartController::class, 'clearCart'])->name('clear-cart');
+    Route::post('/apply-coupon', [\App\Http\Controllers\CartController::class, 'applyCoupon'])
+        ->name('apply-coupon');
 });
 
 Route::prefix('checkout')->as('checkout.')->group(function () {

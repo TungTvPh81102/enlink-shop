@@ -36,7 +36,7 @@
                         @endphp
                         @foreach($cartDetails as $variantId => $item)
                             @php
-                                $discountedPrice =  $item['price_sale'] > 0 ? $item['price'] * (1 - ($item['price_sale'] / 100)) : $item['price'];
+                                $discountedPrice =  $item['price_sale'] > 0 ? $item['price_regular'] * (1 - ($item['price_sale'] / 100)) : $item['price_regular'];
                                 $subTotal = $discountedPrice * $item['qty'];
                                 $total += $subTotal;
                             @endphp
@@ -65,10 +65,10 @@
                                             <p class="card-text">
                                                 @if($item['price_sale'] > 0)
                                                     <span
-                                                        class="fs-13px fw-500 text-decoration-line-through pe-3">{{ number_format($item['price']) }}đ</span>
+                                                        class="fs-13px fw-500 text-decoration-line-through pe-3">{{ number_format($item['price_regular']) }}đ</span>
                                                     <span class="fs-15px fw-bold text-body-emphasis">{{ number_format($discountedPrice) }}đ</span>
                                                 @else
-                                                    <span class="fs-15px fw-bold text-body-emphasis">{{ number_format($item['price']) }}đ</span>
+                                                    <span class="fs-15px fw-bold text-body-emphasis">{{ number_format($item['price_regular']) }}đ</span>
                                                 @endif
                                             </p>
                                         </div>
@@ -119,28 +119,59 @@
                     </tbody>
                 </table>
             </form>
-            <div class="row pt-8 pt-lg-11 pb-16 pb-lg-18 justify-content-end">
+            <div class="row pt-6 pt-lg-8 pb-16 pb-lg-18 justify-content-between">
+                <div class="col-lg-4 pt-2">
+                    <h4 class="fs-24 mb-6">Mã giảm giá</h4>
+                    <p class="mb-7">Nhập mã phiếu giảm giá nếu bạn có..</p>
+                    <form action="{{ route('cart.apply-coupon') }}" method="post">
+                        @csrf
+                        <input type="text" name="coupon_code" class="form-control mb-7"
+                               placeholder="Nhập mã giảm giá">
+                        <button type="submit" class="btn btn-dark btn-hover-bg-primary btn-hover-border-primary">
+                            Áp dụng
+                        </button>
+                    </form>
+                </div>
                 <div class="col-lg-4 pt-lg-0 pt-11">
                     <div class="card border-0" style="box-shadow: 0 0 10px 0 rgba(0,0,0,0.1)">
                         <div class="card-body px-9 pt-6">
                             <div class="d-flex align-items-center justify-content-between mb-5">
-                                <span>Subtotal:</span>
-                                <span
-                                    class="d-block ml-auto text-body-emphasis fw-bold">{{ isset($total) ? number_format($total) : '0' }}  </span>
+                                <span>Tạm tính:</span>
+                                <span class="d-block ml-auto text-body-emphasis fw-bold">
+                                           {{ $total ? number_format($total) : '0' }}đ
+                                    </span>
                             </div>
+                            @if(session()->has('coupon'))
+                                <div class="d-flex align-items-center justify-content-between mb-5">
+                                    <span>Giảm giá:</span>
+                                    <span class="d-block ml-auto text-body-emphasis fw-bold">-{{ number_format(session()->get('coupon')['reduce']) }}đ</span>
+                                </div>
+                            @endif
                             <div class="d-flex align-items-center justify-content-between">
-                                <span>Shipping:</span>
-                                <span class="d-block ml-auto text-body-emphasis fw-bold">$0</span>
+                                <span>Vận chuyển:</span>
+                                <span class="d-block ml-auto text-body-emphasis fw-bold">Free</span>
                             </div>
                         </div>
                         <div class="card-footer bg-transparent px-0 pt-5 pb-7 mx-9">
                             <div class="d-flex align-items-center justify-content-between fw-bold mb-7">
-                                <span class="text-secondary text-body-emphasis">Total pricre:</span>
-                                <span class="d-block ml-auto text-body-emphasis fs-4 fw-bold">$99.00</span>
+                                <span class="text-secondary text-body-emphasis">Tổng thanh toán:</span>
+                                @if(session()->has('coupon'))
+                                    @php
+                                        $finalTotal = $total - session()->get('coupon')['reduce'];
+                                    @endphp
+                                    <span class="d-block ml-auto text-body-emphasis fs-4 fw-bold">
+                                          {{ number_format($finalTotal) }}đ
+                                    </span>
+                                @else
+                                    <span class="d-block ml-auto text-body-emphasis fs-4 fw-bold">
+                                           {{ $total ? number_format($total) : '0' }}đ
+                                    </span>
+                                @endif
+
                             </div>
                             <a href="{{ route('checkout.show-form-checkout') }}"
                                class="btn w-100 btn-dark btn-hover-bg-primary btn-hover-border-primary"
-                               title="Check Out">Check Out</a>
+                               title="Check Out">Thanh toán</a>
                         </div>
                     </div>
                 </div>
@@ -155,12 +186,6 @@
 @section('scripts')
     <script>
         $(document).ready(function () {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
             $('#clear-cart').on('click', function () {
 
                 Swal.fire({

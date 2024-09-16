@@ -2,46 +2,30 @@
     <div class="container container-xxl pt-4">
         <div class="row">
             <div class="col-lg col-md-4 col-12 mb-11 mb-lg-0">
-                <h3 class="fs-5 mb-6">Company</h3>
+                <h3 class="fs-5 mb-6">Công ty</h3>
                 <p class="pe-xl-18 lh-2">
-                    Find a location nearest you. See
-                    <a class="text-body-emphasis" href="#"
-                    ><u class="fw-medium">Our Stores</u></a
-                    >
+                    {{ config('settings.address') }}
                 </p>
                 <p class="mb-0 lh-2">
-                    <strong class="text-body-emphasis">+391 (0)35 2568 4593</strong>
+                    <strong class="text-body-emphasis">  {{ config('settings.phone') }}</strong>
                     <br />
-                    hello@domain.com
+                    {{ config('settings.email') }}
                 </p>
             </div>
             <div class="col-lg col-md-4 col-12 mb-11 mb-lg-0">
-                <h3 class="fs-5 mb-6">Useful links</h3>
+                <h3 class="fs-5 mb-6">Danh mục sản phẩm</h3>
                 <ul class="list-unstyled mb-0 fw-medium">
-                    <li class="pt-3 mb-4">
-                        <a href="#" title="New Products" class="text-body"
-                        >New Products</a
-                        >
-                    </li>
-                    <li class="pt-3 mb-4">
-                        <a href="#" title="Best Sellers" class="text-body"
-                        >Best Sellers</a
-                        >
-                    </li>
-                    <li class="pt-3 mb-4">
-                        <a href="#" title="Bundle &amp; Save" class="text-body"
-                        >Bundle &amp; Save</a
-                        >
-                    </li>
-                    <li class="pt-3 mb-4">
-                        <a href="#" title="Online Gift Card" class="text-body"
-                        >Online Gift Card</a
-                        >
-                    </li>
+                    @foreach($categories as $item)
+                        <li class="pt-3 mb-4">
+                            <a href="{{ route('product-category.list', $item->slug) }}" title="New Products" class="text-body"
+                            >{{ $item->name }}</a
+                            >
+                        </li>
+                    @endforeach
                 </ul>
             </div>
             <div class="col-lg col-md-4 col-12 mb-11 mb-lg-0">
-                <h3 class="fs-5 mb-6">Information</h3>
+                <h3 class="fs-5 mb-6">Thông tin</h3>
                 <ul class="list-unstyled mb-0 fw-medium">
                     <li class="pt-3 mb-4">
                         <a href="#" title="Start a Return" class="text-body"
@@ -69,23 +53,22 @@
                 </ul>
             </div>
             <div class="col-lg-5 col-12 mb-11 mb-lg-0">
-                <h3 class="mb-4">Good emails.</h3>
+                <h3 class="mb-4">Nhập email.</h3>
                 <p class="lh-2">
-                    Enter your email below to be the first to know about new
-                    collections and product launches.
+                    Nhập email của bạn bên dưới để là người đầu tiên biết về các bộ sưu tập mới và ra mắt sản phẩm.
                 </p>
                 <form class="pt-8">
                     <div class="input-group position-relative">
                         <input
                             type="email"
                             class="form-control bg-body rounded-left"
-                            placeholder="Enter your email address"
+                            placeholder="Nhập email của bạn"
                         />
                         <button
                             type="submit"
                             class="btn btn-dark btn-hover-bg-primary btn-hover-border-primary ms-0"
                         >
-                            Subscribe
+                            Đăng ký
                         </button>
                     </div>
                 </form>
