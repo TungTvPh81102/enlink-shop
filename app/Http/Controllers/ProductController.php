@@ -188,11 +188,20 @@ class ProductController extends Controller
             abort(404);
         }
 
-        $products = Product::query()
-            ->with(['variants', 'brand', 'category.parent'])
-            ->where('name', 'like', '%' . $request->q . '%')
-            ->where('status', 'publish')
-            ->latest('id')->paginate(12);
+        if (strlen($request->q) < 3) {
+            $products = Product::query()
+                ->with(['variants', 'brand', 'category.parent'])
+                ->where('name', 'like', '%' . $request->q . '%')
+                ->where('status', 'publish')
+                ->latest('id')
+                ->paginate(12);
+        } else {
+            $products = Product::query()
+                ->with(['variants', 'brand', 'category.parent'])
+                ->whereFullText('name', $request->q)
+                ->where('status', 'publish')
+                ->latest('id')->paginate(12);
+        }
 
         $products = $products->appends(['q' => $request->q]);
 

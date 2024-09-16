@@ -28,6 +28,7 @@ return new class extends Migration {
             $table->enum('status',[\App\Models\Product::STATUS_DRAFT, \App\Models\Product::STATUS_PENDING, \App\Models\Product::STATUS_PUBLISH])
                 ->default(\App\Models\Product::STATUS_DRAFT);
             $table->softDeletes();
+            $table->fullText('name');
             $table->timestamps();
         });
     }
