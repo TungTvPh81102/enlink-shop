@@ -18,6 +18,8 @@
     @include('layouts.styles.styles')
 
     @yield('styles')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
 
 </head>
 <body>
@@ -51,14 +53,27 @@
 @include('layouts.scripts.scripts')
 @yield('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
-    @if($errors)
-        @foreach($errors->all() as $error)
-            @php
-                toastr()->error($error);
-            @endphp
-        @endforeach
+    @if(session()->has('success'))
+        @php
+            toastr()->success(session()->get('success'));
+        @endphp
     @endif
+
+    @if(session()->has('error'))
+        @php
+            toastr()->error(session()->get('error'));
+        @endphp
+    @endif
+
+    $(document).ready(function () {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    })
 </script>
 
 </body>

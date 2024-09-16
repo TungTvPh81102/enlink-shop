@@ -35,22 +35,6 @@
                                    aria-controls="collapsecoupon">Click here to enter your code</a>
                             </p>
                         @endif
-                        <div class="collapse" id="collapsecoupon">
-                            <div class="card mw-60 border-0">
-                                <div class="card-body py-10 px-8 my-10 border">
-                                    <p class="card-text text-body-emphasis mb-8">
-                                        If you have a coupon code, please apply it below.</p>
-                                    <div class="input-group position-relative">
-                                        <input type="email" class="form-control bg-body rounded-end"
-                                               placeholder="Your Email*">
-                                        <button type="submit"
-                                                class="btn btn-dark btn-hover-bg-primary btn-hover-border-primary">
-                                            Apply Coupon
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <h4 class="fs-4 pt-4 mb-7">Thông tin vận chuyển</h4>
                         <div class="mb-7">
                             <label class="mb-5 fs-13px letter-spacing-01 fw-semibold text-uppercase">Tên</label>
@@ -60,7 +44,7 @@
                                            id="last-name" name="user_name"
                                            placeholder="Họ và tên" required>
                                     @error('name')
-                                         <span class="text-danger">{{ $message }}</span>
+                                    <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
@@ -74,7 +58,7 @@
                                            id="street-address" name="user_email"
                                            required>
                                     @error('email')
-                                         <span class="text-danger">{{ $message }}</span>
+                                    <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="col-md-4">
@@ -83,7 +67,7 @@
                                     <input type="text" class="form-control mb-6" value="{{ Auth::user()->phone ?? '' }}"
                                            id="phone" name="user_phone" required>
                                     @error('phone')
-                                         <span class="text-danger">{{ $message }}</span>
+                                    <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
@@ -220,5 +204,38 @@
                 });
             }
         });
+
+        {{--$('#apply').on('click', function () {--}}
+        {{--    $('#apply-coupon').submit();--}}
+        {{--    let couponCode = $('#coupon_code').val();--}}
+        {{--    let total = $('#total').val();--}}
+        {{--    if (couponCode) {--}}
+        {{--        $.ajax({--}}
+        {{--            url: '{{ route('checkout.apply-coupon') }}',--}}
+        {{--            type: "POST",--}}
+        {{--            data: {--}}
+        {{--                coupon_code: couponCode,--}}
+        {{--                total: total--}}
+        {{--            },--}}
+        {{--            dataType: "json",--}}
+        {{--            success: function (res) {--}}
+        {{--                if (res.success) {--}}
+        {{--                    $('#coupon_code').val('');--}}
+        {{--                    $('#collapsecoupon').collapse('hide');--}}
+        {{--                    toastr.success(res.message);--}}
+        {{--                    $('#coupon_apply').html(`--}}
+        {{--                        <span>Giảm giá:</span>--}}
+        {{--                        <span class="d-block ms-auto text-body-emphasis fw-bold">- ${res.reduce}đ</span>`);--}}
+        {{--                    $('#final_total').text(`${number_format(res.final_total)} đ`);--}}
+        {{--                } else {--}}
+        {{--                    toastr.warning(res.message);--}}
+        {{--                }--}}
+        {{--            },--}}
+        {{--            error: function () {--}}
+        {{--                toastr.error(res.message);--}}
+        {{--            }--}}
+        {{--        });--}}
+        {{--    }--}}
+        {{--})--}}
     </script>
 @endsection

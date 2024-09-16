@@ -150,28 +150,6 @@
                                 </ul>
                             </div>
                         @endif
-
-                        <div class="widget widget-product-price">
-                            <h4 class="widget-title fs-5 mb-6">Giá</h4>
-                            <ul class="navbar-nav navbar-nav-cate" id="widget_product_price">
-                                <li class="nav-item">
-                                    <a href="#" title="All"
-                                       class="text-reset position-relative d-block text-decoration-none text-body-emphasis-hover d-flex align-items-center"><span
-                                            class="text-hover-underline">All</span></a></li>
-                                <li class="nav-item">
-                                    <a href="#" title="$10 - $50"
-                                       class="text-reset position-relative d-block text-decoration-none text-body-emphasis-hover d-flex align-items-center"><span
-                                            class="text-hover-underline">$10 - $50</span></a></li>
-                                <li class="nav-item">
-                                    <a href="#" title="$50 - $100"
-                                       class="text-reset position-relative d-block text-decoration-none text-body-emphasis-hover d-flex align-items-center"><span
-                                            class="text-hover-underline">$50 - $100</span></a></li>
-                                <li class="nav-item">
-                                    <a href="#" title="$100 - $200"
-                                       class="text-reset position-relative d-block text-decoration-none text-body-emphasis-hover d-flex align-items-center"><span
-                                            class="text-hover-underline">$100 - $200</span></a></li>
-                            </ul>
-                        </div>
                         <div class="widget widget-product_colors">
                             <h4 class="widget-title fs-5 mb-6">Màu sắc</h4>
                             <ul class="navbar-nav navbar-nav-cate" id="widget_product_colors">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\CartDetail;
+use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
@@ -107,15 +108,22 @@ class CartController extends Controller
                 $userId = Auth::id();
                 $cart = Cart::query()->where('user_id', $userId)->first();
                 if (!empty($cart)) {
+                    $sessionCarts = session()->get('cart', []);
                     foreach ($request->quantity as $key => $item) {
                         $cartItem = CartDetail::query()
                             ->where('cart_id', $cart->id)
                             ->where('product_variant_id', $key)
                             ->first();
+
                         if ($cartItem) {
                             $cartItem->update(['quantity' => $item['qty']]);
+                            if (isset($sessionCarts[$key])) {
+                                $sessionCarts[$key]['qty'] = $item['qty'];
+                            }
                         }
                     }
+
+                    session()->put('cart', $sessionCarts);
                 }
             } else {
                 $carts = session()->get('cart', []);
@@ -161,6 +169,7 @@ class CartController extends Controller
                             session()->put('cart', $sessionCart);
                         }
 
+                        session()->forget('coupon');
                         return redirect()->back()->with('success', 'Xoá sản phẩm thành công');
                     } else {
                         return redirect()->back()->with('error', 'Sản phẩm không có trong giỏ hàng.');
@@ -173,9 +182,11 @@ class CartController extends Controller
                 if (isset($cart[$id])) {
                     unset($cart[$id]);
                     session()->put('cart', $cart);
+                    session()->forget('coupon');
                     return redirect()->back()->with('success', 'Xoá sản phẩm thành công');
                 }
             }
+
 
         } catch (\Exception $e) {
             Log::error(__CLASS__ . '@' . __FUNCTION__, [
@@ -203,7 +214,9 @@ class CartController extends Controller
                     ], 404);
                 }
                 session()->forget('cart');
-            }else {
+                session()->forget('coupon');
+            } else {
+                session()->forget('coupon');
                 session()->forget('cart');
             }
 
@@ -219,6 +232,76 @@ class CartController extends Controller
             return response()->json([
                 'message' => 'Có lỗi xảy ra, vui lòng thử lại!'
             ], 500);
+        }
+    }
+
+    // [POST]: Apply mã giảm giá
+    public function applyCoupon(Request $request)
+    {
+        try {
+            $couponCode = $request->coupon_code;
+
+            if ($couponCode) {
+                $existingCoupon = session()->get('coupon');
+
+                if ($existingCoupon) {
+                    return redirect()->back()->with('warning', 'Mã đang được sử dụng.');
+                }
+
+                $coupon = Coupon::checkCoupon($couponCode);
+                $cart = session()->get('cart', []);
+                $total = 0;
+
+                if (!empty($cart)) {
+                    foreach ($cart as $item) {
+                        $discountedPrice = $item['price_sale'] > 0
+                            ? $item['price_regular'] * (1 - ($item['price_sale'] / 100))
+                            : $item['price_regular'];
+
+                        $subTotal = $discountedPrice * $item['qty'];
+                        $total += $subTotal;
+                    }
+                }
+
+                if (empty($coupon)) {
+                    throw new \Exception('Mã không hợp lệ hoặc đã hết hạn, vui lòng thử lại');
+                }
+
+                if ($coupon->min_order_total > $total) {
+                    $conditionAplly = $coupon->min_order_total - $total;
+                    throw new \Exception('Cần thêm ' . number_format($conditionAplly) . 'đ để áp dụng mã giảm giá');
+                }
+
+                $reduce = 0;
+                if ($coupon->type === Coupon::TYPE_PERCENT) {
+                    $reduce = ($total * $coupon->value) / 100;
+                    if (isset($coupon->max_discount_percentage) && $reduce > $coupon->max_discount_percentage) {
+                        $reduce = $coupon->max_discount_percentage;
+                    }
+
+                } else if ($coupon->type === Coupon::TYPE_FIXED) {
+                    $reduce = $coupon->value;
+                }
+
+                session()->put('coupon', [
+                    'id' => $coupon->id,
+                    'code' => $coupon->code,
+                    'type' => $coupon->type,
+                    'value' => $coupon->value,
+                    'reduce' => $reduce,
+                    'discount_percent' => $coupon->type === Coupon::TYPE_PERCENT ? $coupon->value : 0
+                ]);
+
+                return redirect()->back()->with('success', 'Áp dụng mã giảm giá thành công');
+            }
+
+        } catch (\Exception $e) {
+            Log::error(__CLASS__ . '@' . __FUNCTION__, [
+                'exception-message' => $e,
+                'request_data' => $request->all()
+            ]);
+
+            return redirect()->back()->with('warning', $e->getMessage());
         }
     }
 }

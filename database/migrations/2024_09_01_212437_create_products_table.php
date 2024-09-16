@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->longText('content')->nullable();
             $table->unsignedBigInteger('view')->default(0)->nullable();
             $table->enum('product_type', [\App\Models\Product::PRODUCT_TYPE_HOME, \App\Models\Product::PRODUCT_TYPE_HOT, \App\Models\Product::PRODUCT_TYPE_NEW])
-                ->nullable()->default([\App\Models\Product::PRODUCT_TYPE_NEW]);
+                ->nullable()->default(\App\Models\Product::PRODUCT_TYPE_NEW);
             $table->enum('status',[\App\Models\Product::STATUS_DRAFT, \App\Models\Product::STATUS_PENDING, \App\Models\Product::STATUS_PUBLISH])
                 ->default(\App\Models\Product::STATUS_DRAFT);
             $table->softDeletes();

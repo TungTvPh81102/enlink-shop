@@ -196,6 +196,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\TelescopeServiceProvider::class,
         Illuminate\Mail\MailServiceProvider::class,
+        App\Providers\SettingsServiceProvider::class
     ],
 
     /*

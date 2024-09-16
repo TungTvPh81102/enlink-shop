@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Addresse;
 use App\Models\Cart;
+use App\Models\Coupon;
 use App\Models\Order;
+use App\Models\OrderCoupon;
 use App\Models\OrderDetail;
 use App\Models\ProductVariant;
 use App\Models\Province;
@@ -16,7 +18,7 @@ use Illuminate\Support\Facades\Log;
 
 class CheckoutController extends Controller
 {
-    // Giao diện trang thanh toán
+    // [GET]: Giao diện trang thanh toán
     public function showFormCheckout()
     {
         $title = 'Thanh toán';
@@ -41,7 +43,7 @@ class CheckoutController extends Controller
         ]));
     }
 
-    // Xử lý thành toán
+    // [POST]: Xử lý thành toán
     public function handleCheckout(Request $request)
     {
         $this->validateRequest($request);
@@ -58,17 +60,17 @@ class CheckoutController extends Controller
                     $cartDetails = $cart->cartDetails()->with('productVariant.product')->get();
                 }
 
-                $totalPrice = 0;
                 $dataItem = [];
+                $totalPrice = 0;
                 foreach ($cartDetails as $cartDetail) {
                     $product = $cartDetail->productVariant->product;
                     $productVariant = $cartDetail->productVariant;
 
                     $discountPrice = $product->price_sale > 0 ?
-                        $productVariant->price * (1 - ($product->price_sale / 100)) :
-                        $productVariant->price;
-                    $subTotal = $discountPrice * $cartDetail->quantity;
-                    $totalPrice += $subTotal;
+                        $product->price_regular * (1 - ($product->price_sale / 100)) :
+                        $product->price_regular;
+
+                    $totalPrice += $discountPrice * $cartDetail->quantity;
 
                     $dataItem[] = [
                         'product_variant_id' => $productVariant->id,
@@ -81,21 +83,27 @@ class CheckoutController extends Controller
                         'variant_size_name' => $cartDetail->productVariant->size->name,
                         'variant_color_name' => $cartDetail->productVariant->color->name,
                     ];
+                }
 
+                $coupon = session()->get('coupon');
+                $discount = 0;
 
+                if ($coupon) {
+                    $discount = $coupon['reduce'];
+                    $totalPrice -= $discount;
                 }
 
                 if ($request->is_ship_user_same_user == 1) {
                     $dataOrder = [
                         'user_id' => $user->id,
-                        'user_name' => $user->name,
-                        'user_email' => $user->email,
-                        'user_phone' => $user->phone,
+                        'user_name' => $user->name ?? $request->user_name,
+                        'user_email' => $user->email ?? $request->user_email,
+                        'user_phone' => $user->phone ?? $request->user_phone,
                         'payment_method' => $request->payment_method,
                         'payment_status' => 0,
                         'total_price' => $totalPrice,
                     ];
-                }else {
+                } else {
                     $dataOrder = [
                         'user_id' => $user->id,
                         'user_name' => $user->name,
@@ -126,6 +134,18 @@ class CheckoutController extends Controller
                     OrderDetail::create($item);
                 }
 
+                if ($coupon) {
+                    OrderCoupon::create([
+                        'order_id' => $orders->id,
+                        'coupon_id' => $coupon['id'],
+                        'reduce' => $discount,
+                        'discount_percent' => $coupon['discount_percent'] ?? 0,
+                        'applied_at' => date('Y-m-d H:i:s')
+                    ]);
+                    $checkCoupon = Coupon::checkCoupon($coupon['code']);
+                    $checkCoupon->decrement('max_uses');
+                }
+
                 foreach ($cartDetails as $cartDetail) {
                     $cartDetail->delete();
                     $productVariant = ProductVariant::find($cartDetail->product_variant_id);
@@ -137,6 +157,7 @@ class CheckoutController extends Controller
                 DB::commit();
 
                 session()->forget('cart');
+                session()->forget('coupon');
                 return redirect()->route('home')->with('success', 'Đặt hàng thành công');
 
             } else {
@@ -148,7 +169,6 @@ class CheckoutController extends Controller
 
             Log::error(__CLASS__ . '@' . __FUNCTION__, [
                 'exception-message' => $e,
-                'exception-code' => $e->getCode(),
                 'request_data' => $request->all()
             ]);
 

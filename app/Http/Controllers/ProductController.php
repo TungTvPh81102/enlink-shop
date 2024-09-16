@@ -93,7 +93,6 @@ class ProductController extends Controller
 
     public function showDetailProduct($slug)
     {
-//        session()->forget('cart');
         $product = Product::query()
             ->with(['variants', 'galleries', 'category.parent', 'brand'])
             ->where('products.slug', $slug)->firstOrFail();

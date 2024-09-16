@@ -15,7 +15,6 @@ return new class extends Migration {
             $table->foreignIdFor(\App\Models\Product::class)->constrained();
             $table->foreignIdFor(\App\Models\Size::class)->constrained();
             $table->foreignIdFor(\App\Models\Color::class)->constrained();
-            $table->double('price')->nullable();
             $table->unsignedInteger('quantity')->nullable()->default(0);
             $table->unique([
                 'product_id',

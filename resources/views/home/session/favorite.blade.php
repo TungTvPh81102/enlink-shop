@@ -14,7 +14,7 @@
             <div class="card border-0 rounded-0 hover-zoom-in hover-shine">
                 <img
                     class="lazy-image w-100 img-fluid card-img object-fit-cover banner-02"
-                    src="{{ Storage::url($incentive[1]->image) }}"
+                    src="{{ Storage::url($incentive[1]->image ??'') }}"
                     width="570"
                     height="913"
                     alt="Pamper Your Skin"
@@ -28,10 +28,10 @@
                         Get the Glow
                     </h5>
                     <h3 class="card-title mb-0 fs-2 text-white">
-                       {{ $incentive[1]->title }}
+                       {{ $incentive[1]->title ??'' }}
                     </h3>
                     <div class="mt-10 pt-2">
-                        <a href="{{ $incentive[1]->link }}" class="btn btn-white">{{ $incentive[1]->btn_title }}</a>
+                        <a href="{{ $incentive[1]->link ??'' }}" class="btn btn-white">{{ $incentive[1]->btn_title ??'' }}</a>
                     </div>
                 </div>
             </div>

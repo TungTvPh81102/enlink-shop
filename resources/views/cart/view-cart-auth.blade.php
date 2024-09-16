@@ -20,18 +20,18 @@
         <div class="shopping-cart">
             <h2 class="text-center fs-2 mt-12 mb-13">{{ $title }}</h2>
             @if(count($cartDetails) > 0)
-            <form action="{{ route('cart.update-cart') }}" class="table-responsive-md pb-8 pb-lg-10" method="POST">
-                @csrf
-                @method('PUT')
-                <table class="table border">
-                    <thead class="bg-body-secondary">
-                    <tr class="fs-15px letter-spacing-01 fw-semibold text-uppercase text-body-emphasis">
-                        <th scope="col" class="fw-semibold border-1 ps-11">Sản phẩm</th>
-                        <th scope="col" class="fw-semibold border-1">Số lượng</th>
-                        <th colspan="2" class="fw-semibold border-1">Giá</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+                <form action="{{ route('cart.update-cart') }}" class="table-responsive-md pb-8 pb-lg-10" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <table class="table border">
+                        <thead class="bg-body-secondary">
+                        <tr class="fs-15px letter-spacing-01 fw-semibold text-uppercase text-body-emphasis">
+                            <th scope="col" class="fw-semibold border-1 ps-11">Sản phẩm</th>
+                            <th scope="col" class="fw-semibold border-1">Số lượng</th>
+                            <th colspan="2" class="fw-semibold border-1">Giá</th>
+                        </tr>
+                        </thead>
+                        <tbody>
                         @php
                             $total = 0;
                         @endphp
@@ -40,8 +40,8 @@
                                 $variant = $item->productVariant ?? null;
                                 $product = $variant ? $variant->product : null;
                                 $discountedPrice = $product->price_sale > 0
-                                    ? $variant->price * (1 - ($product->price_sale / 100))
-                                    : $variant->price;
+                                    ? $product->price_regular * (1 - ($product->price_sale / 100))
+                                    : $product->price_regular;
                                 $subTotal = $discountedPrice * $item->quantity;
                                 $total += $subTotal;
                             @endphp
@@ -70,10 +70,10 @@
                                             </p>
                                             <p class="card-text">
                                                 @if($product->price_sale > 0)
-                                                    <span class="fs-13px fw-500 text-decoration-line-through pe-3">{{ number_format($variant->price) }}đ</span>
+                                                    <span class="fs-13px fw-500 text-decoration-line-through pe-3">{{ number_format($product->price_regular) }}đ</span>
                                                     <span class="fs-15px fw-bold text-body-emphasis">{{ number_format($discountedPrice) }}đ</span>
                                                 @else
-                                                    <span class="fs-15px fw-bold text-body-emphasis">{{ number_format($variant->price) }}đ</span>
+                                                    <span class="fs-15px fw-bold text-body-emphasis">{{ number_format($product->price_regular) }}đ</span>
                                                 @endif
                                             </p>
                                         </div>
@@ -127,35 +127,66 @@
                                 </button>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
-            </form>
-            <div class="row pt-8 pt-lg-11 pb-16 pb-lg-18 justify-content-end">
-                <div class="col-lg-4 pt-lg-0 pt-11">
-                    <div class="card border-0" style="box-shadow: 0 0 10px 0 rgba(0,0,0,0.1)">
-                        <div class="card-body px-9 pt-6">
-                            <div class="d-flex align-items-center justify-content-between mb-5">
-                                <span>Subtotal:</span>
-                                <span
-                                    class="d-block ml-auto text-body-emphasis fw-bold">{{ isset($total) ? number_format($total) : '0' }}  </span>
+                        </tbody>
+                    </table>
+                </form>
+                <div class="row pt-6 pt-lg-8 pb-16 pb-lg-18 justify-content-between">
+                    <div class="col-lg-4 pt-2">
+                        <h4 class="fs-24 mb-6">Mã giảm giá</h4>
+                        <p class="mb-7">Nhập mã phiếu giảm giá nếu bạn có..</p>
+                        <form action="{{ route('cart.apply-coupon') }}" method="post">
+                            @csrf
+                            <input type="text" name="coupon_code" class="form-control mb-7"
+                                   placeholder="Nhập mã giảm giá">
+                            <button type="submit" class="btn btn-dark btn-hover-bg-primary btn-hover-border-primary">
+                                Áp dụng
+                            </button>
+                        </form>
+                    </div>
+                    <div class="col-lg-4 pt-lg-0 pt-11">
+                        <div class="card border-0" style="box-shadow: 0 0 10px 0 rgba(0,0,0,0.1)">
+                            <div class="card-body px-9 pt-6">
+                                <div class="d-flex align-items-center justify-content-between mb-5">
+                                    <span>Tạm tính:</span>
+                                    <span class="d-block ml-auto text-body-emphasis fw-bold">
+                                           {{ $total ? number_format($total) : '0' }}đ
+                                    </span>
+                                </div>
+                                @if(session()->has('coupon'))
+                                    <div class="d-flex align-items-center justify-content-between mb-5">
+                                        <span>Giảm giá:</span>
+                                        <span class="d-block ml-auto text-body-emphasis fw-bold">-{{ number_format(session()->get('coupon')['reduce']) }}đ</span>
+                                    </div>
+                                @endif
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span>Vận chuyển:</span>
+                                    <span class="d-block ml-auto text-body-emphasis fw-bold">Free</span>
+                                </div>
                             </div>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <span>Shipping:</span>
-                                <span class="d-block ml-auto text-body-emphasis fw-bold">$0</span>
+                            <div class="card-footer bg-transparent px-0 pt-5 pb-7 mx-9">
+                                <div class="d-flex align-items-center justify-content-between fw-bold mb-7">
+                                    <span class="text-secondary text-body-emphasis">Tổng thanh toán:</span>
+                                    @if(session()->has('coupon'))
+                                        @php
+                                            $finalTotal = $total - session()->get('coupon')['reduce'];
+                                        @endphp
+                                        <span class="d-block ml-auto text-body-emphasis fs-4 fw-bold">
+                                          {{ number_format($finalTotal) }}đ
+                                    </span>
+                                    @else
+                                        <span class="d-block ml-auto text-body-emphasis fs-4 fw-bold">
+                                           {{ $total ? number_format($total) : '0' }}đ
+                                    </span>
+                                    @endif
+
+                                </div>
+                                <a href="{{ route('checkout.show-form-checkout') }}"
+                                   class="btn w-100 btn-dark btn-hover-bg-primary btn-hover-border-primary"
+                                   title="Check Out">Thanh toán</a>
                             </div>
-                        </div>
-                        <div class="card-footer bg-transparent px-0 pt-5 pb-7 mx-9">
-                            <div class="d-flex align-items-center justify-content-between fw-bold mb-7">
-                                <span class="text-secondary text-body-emphasis">Total pricre:</span>
-                                <span class="d-block ml-auto text-body-emphasis fs-4 fw-bold">$99.00</span>
-                            </div>
-                            <a href="{{ route('checkout.show-form-checkout') }}"
-                               class="btn w-100 btn-dark btn-hover-bg-primary btn-hover-border-primary"
-                               title="Check Out">Thanh toán</a>
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
     </section>
     @else
@@ -166,12 +197,6 @@
 @section('scripts')
     <script>
         $(document).ready(function () {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
             $('#clear-cart').on('click', function () {
 
                 Swal.fire({

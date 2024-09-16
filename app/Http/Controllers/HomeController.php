@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Banner;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\ProductGallery;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -34,7 +32,7 @@ class HomeController extends Controller
             ->latest('id')->get();
 
         $incentive = Banner::query()
-            ->select('title', 'image','btn_title','link')
+            ->select('title', 'image', 'btn_title', 'link')
             ->where([
                 'type' => 'incentive',
                 'status' => 1,
@@ -53,6 +51,14 @@ class HomeController extends Controller
             ->limit(6)
             ->get();
 
+        $smallSlider = Banner::query()
+            ->where([
+                'type' => 'small',
+                'status' => 1,
+            ])
+            ->limit(3)
+            ->latest('id')->get();
+
         return view('home', compact([
             'title',
             'categories',
@@ -60,6 +66,7 @@ class HomeController extends Controller
             'banners',
             'incentive',
             'galleries',
+            'smallSlider',
         ]));
     }
 }

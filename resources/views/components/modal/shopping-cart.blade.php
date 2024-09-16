@@ -35,7 +35,7 @@
                 @if(!empty(session()->get('cart')))
                     @foreach(session()->get('cart') as $key => $item)
                         @php
-                            $discountPrice = $item['price_sale'] > 0 ? $item['price'] * (1 - ($item['price_sale'] / 100)) : $item['price'];
+                            $discountPrice = $item['price_sale'] > 0 ? $item['price_regular'] * (1 - ($item['price_sale'] / 100)) : $item['price_regular'];
                             $total += $discountPrice * $item['qty'];
                         @endphp
                         <tr class="position-relative">
@@ -58,12 +58,12 @@
                                         <p class="card-text mb-1">
                                             @if($item['price_sale'] > 0)
                                                 <span
-                                                    class="fs-13px fw-500 text-decoration-line-through pe-3">{{ number_format( $item['price'])  }}</span>
+                                                    class="fs-13px fw-500 text-decoration-line-through pe-3">{{ number_format( $item['price_regular'])  }}</span>
                                                 <span
                                                     class="fs-15px fw-bold text-body-emphasis">{{ number_format($discountPrice) }}</span>
                                             @else
                                                 <span
-                                                    class="fs-15px fw-bold text-body-emphasis">{{ number_format($item['price']) }}</span>
+                                                    class="fs-15px fw-bold text-body-emphasis">{{ number_format($item['price_regular']) }}</span>
                                             @endif
 
                                         </p>

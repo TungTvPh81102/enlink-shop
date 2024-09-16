@@ -146,7 +146,6 @@
                                 <tr>
                                     <th scope="col">Kích cỡ</th>
                                     <th scope="col">Màu sắc</th>
-                                    <th scope="col">Giá</th>
                                     <th>Số lượng</th>
                                     <th></th>
                                 </tr>
@@ -252,9 +251,7 @@
                                 @endforeach
                         </select>
                       </td>
-                      <td>
-                         <input  class="form-control" id="price-input" placeholder="Giá" type="number">
-                      </td>
+
                       <td>
                          <input class="form-control" id="quantity-input" placeholder="Số lượng" type="number">
                       </td>
@@ -268,14 +265,11 @@
                 var sizeId = row.find('#size-select').val();
                 var colorId = row.find('#color-select').val();
                 var quantityInput = row.find('#quantity-input');
-                var priceInput = row.find('#price-input');
 
                 if(sizeId && colorId) {
                     quantityInput.attr('name', 'product_variants[' + sizeId + '-' + colorId + '][quantity]');
-                    priceInput.attr('name', 'product_variants[' + sizeId + '-' + colorId + '][price]');
                 }else {
                     quantityInput.removeAttr('name');
-                    priceInput.removeAttr('name');
                 }
             })
 

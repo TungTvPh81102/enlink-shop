@@ -14,7 +14,6 @@ class ProductVariant extends Model
         'color_id',
         'size_id',
         'quantity',
-        'price',
     ];
 
     public function size()

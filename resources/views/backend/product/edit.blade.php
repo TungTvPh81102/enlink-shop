@@ -174,7 +174,6 @@
                                 <tr>
                                     <th scope="col">Kích cỡ</th>
                                     <th scope="col">Màu sắc</th>
-                                    <th scope="col">Giá</th>
                                     <th>Số lượng</th>
                                     <th></th>
                                 </tr>
@@ -209,12 +208,6 @@
                                             </td>
                                             <td>
                                                 <input
-                                                    name="product_variants[{{ $item->size_id }}-{{ $item->color_id }}][price]"
-                                                    value="{{ $item->price }}" class="form-control" id="price-input"
-                                                    placeholder="Giá" type="number">
-                                            </td>
-                                            <td>
-                                                <input
                                                     name="product_variants[{{ $item->size_id }}-{{ $item->color_id }}][quantity]"
                                                     value="{{ $item->quantity }}" class="form-control"
                                                     id="quantity-input" placeholder="Số lượng" type="number">
@@ -240,11 +233,13 @@
                     </div>
                     <div class="form-group mb-3 d-flex ">
                         <div class="checkbox mr-4">
-                            <input {{ $product->product_type == 'is_new' ? 'checked' : '' }} name="product_type"  value="is_new" id="checkbox2" type="checkbox">
+                            <input {{ $product->product_type == 'is_new' ? 'checked' : '' }} name="product_type"
+                                   value="is_new" id="checkbox2" type="checkbox">
                             <label for="checkbox2">Sản phẩm mới</label>
                         </div>
                         <div class="checkbox">
-                            <input  {{ $product->product_type == 'is_hot' ? 'checked' : '' }} name="product_type" value="is_hot" id="checkbox3" type="checkbox">
+                            <input {{ $product->product_type == 'is_hot' ? 'checked' : '' }} name="product_type"
+                                   value="is_hot" id="checkbox3" type="checkbox">
                             <label for="checkbox3">Sản phẩm hot</label>
                         </div>
                     </div>
@@ -332,7 +327,7 @@
                         success: function (response) {
                             if (response.status == 'success') {
                                 toastr.success(response.message);
-                            }else {
+                            } else {
                                 toastr.error('Có lỗi xảy ra, vui lòng thử lại');
                             }
                         },
@@ -390,9 +385,6 @@
                 </select>
               </td>
               <td>
-                 <input  class="form-control" id="price-input" placeholder="Giá" type="number">
-              </td>
-              <td>
                  <input class="form-control" id="quantity-input" placeholder="Số lượng" type="number">
               </td>
               <td><button type="button" class="btn btn-danger remove-variant"><i class="fa fa-trash"></i></button></td>
@@ -405,14 +397,11 @@
                 var sizeId = row.find('#size-select').val();
                 var colorId = row.find('#color-select').val();
                 var quantityInput = row.find('#quantity-input');
-                var priceInput = row.find('#price-input');
 
                 if (sizeId && colorId) {
                     quantityInput.attr('name', 'product_variants[' + sizeId + '-' + colorId + '][quantity]');
-                    priceInput.attr('name', 'product_variants[' + sizeId + '-' + colorId + '][price]');
                 } else {
                     quantityInput.removeAttr('name');
-                    priceInput.removeAttr('name');
                 }
             })
 
