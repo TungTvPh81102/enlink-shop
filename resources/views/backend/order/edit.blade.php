@@ -385,8 +385,16 @@
                                         </td>
                                     </tr>
                                 @endforeach
-                                <td colspan="5">Tổng thanh toán</td>
-                                <td colspan="2">{{ number_format($total) }}</td>
+                                @if($order->order_coupons)
+                                    <tr>
+                                        <td colspan="5">Giảm giá</td>
+                                        <td colspan="2">- {{ number_format($order->order_coupons->reduce) }}</td>
+                                    </tr>
+                                @endif
+                                <tr>
+                                    <td colspan="5">Tổng thanh toán</td>
+                                    <td colspan="2">{{ number_format($total) }}</td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>

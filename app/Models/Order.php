@@ -36,4 +36,8 @@ class Order extends Model
     public function order_details() {
         return $this->hasMany(OrderDetail::class);
     }
+
+    public function order_coupons(){
+        return $this->hasOne(OrderCoupon::class, 'order_id');
+    }
 }
