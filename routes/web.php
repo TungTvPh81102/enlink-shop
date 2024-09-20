@@ -83,3 +83,10 @@ Route::prefix('contact')->as('contact.')->group(function () {
     Route::post('/', [\App\Http\Controllers\ContactController::class, 'handleContact'])
         ->name('handle-contact');
 });
+
+Route::prefix('blog')->as('blog.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\BlogController::class, 'showListBlog'])
+        ->name('show-list-blog');
+    Route::get('/{slug}', [\App\Http\Controllers\BlogController::class, 'showDetailBlog'])
+        ->name('show-detail-blog');
+});

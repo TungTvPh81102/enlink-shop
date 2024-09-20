@@ -1,4 +1,4 @@
-<div  class="side-nav">
+<div class="side-nav">
     <div class="side-nav-inner">
         <ul class="side-nav-menu scrollable">
             <li class="nav-item ">
@@ -21,10 +21,10 @@
                 </a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a href="{{ route('admin.categories.index') }}">Danh sách</a>
+                        <a href="{{ route('admin.categories.index') }}">Danh mục sản phẩm</a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.categories.create') }}">Thêm mới</a>
+                        <a href="{{ route('admin.blog-categories.index') }}">Danh mục bài viết</a>
                     </li>
                 </ul>
             </li>
@@ -152,7 +152,7 @@
                 </ul>
             </li>
             <li class="nav-item dropdown">
-                <a  href="{{ route('admin.banners.index') }}">
+                <a href="{{ route('admin.banners.index') }}">
                                 <span class="icon-holder">
                                     <i class="bx bx-image"></i>
                                 </span>
@@ -161,7 +161,7 @@
             </li>
 
             <li class="nav-item dropdown">
-                <a  href="{{ route('admin.settings.index') }}">
+                <a href="{{ route('admin.settings.index') }}">
                                 <span class="icon-holder">
                                     <i class="bx bx-cog bx-spin"></i>
                                 </span>
@@ -182,6 +182,14 @@
                                            <i class="bx bx-message"></i>
                                 </span>
                     <span class="title">Quản lý liên hệ</span>
+                </a>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="{{ route('admin.blog-posts.index') }}">
+                                <span class="icon-holder">
+                                           <i class="bx bx-news"></i>
+                                </span>
+                    <span class="title">Quản lý bài viết</span>
                 </a>
             </li>
             <li class="nav-item dropdown">

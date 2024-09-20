@@ -36,7 +36,7 @@
             <div class="w-100 text-center">
                 <p class="mb-0 fs-14px fw-bold text-primary text-uppercase">
                     Miễn phí vận chuyển cho tất cả các đơn hàng 500,000 đ
-                     </p>
+                </p>
             </div>
             <div class="w-50 d-none d-lg-block">
                 <div class="d-flex align-items-center justify-content-end">
@@ -208,7 +208,7 @@
                                 <ul class="navbar-nav w-100 w-xl-auto">
                                     <li class="nav-item transition-all-xl-1 py-xl-11 py-0 px-xxl-8 px-xl-6 dropdown dropdown-hover dropdown-fullwidth">
                                         <a class="nav-link d-flex justify-content-between position-relative py-xl-0 px-xl-0 text-uppercase fw-semibold ls-1 fs-15px fs-xl-14px"
-                                           href="http://du-an-poly.trihd.id.vn/?action=contact">Bài viết</a>
+                                           href="{{ route('blog.show-list-blog') }}">Bài viết</a>
                                     </li>
                                     <li class="nav-item transition-all-xl-1 py-xl-11 py-0 px-xxl-8 px-xl-6 dropdown dropdown-hover dropdown-fullwidth">
                                         <a class="nav-link d-flex justify-content-between position-relative py-xl-0 px-xl-0 text-uppercase fw-semibold ls-1 fs-15px fs-xl-14px"

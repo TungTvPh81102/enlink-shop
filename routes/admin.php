@@ -195,6 +195,36 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::delete('/{contact}', [\App\Http\Controllers\Backend\ContactController::class, 'destroy'])
             ->name('destroy');
     });
+
+    // ROUTE BLOG CATEGORIES
+    Route::prefix('blog-categories')->as('blog-categories.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Backend\BlogCategoryController::class, 'index'])
+            ->name('index');
+        Route::get('/create', [\App\Http\Controllers\Backend\BlogCategoryController::class, 'create'])
+            ->name('create');
+        Route::post('/', [\App\Http\Controllers\Backend\BlogCategoryController::class, 'store'])
+            ->name('store');
+        Route::get('/{id}/edit', [\App\Http\Controllers\Backend\BlogCategoryController::class, 'edit'])
+            ->name('edit');
+        Route::put('/{blogCategory}', [\App\Http\Controllers\Backend\BlogCategoryController::class, 'update'])
+            ->name('update');
+        Route::delete('/{blogCategory}', [\App\Http\Controllers\Backend\BlogCategoryController::class, 'destroy'])
+            ->name('destroy');
+    });
+
+    // ROUTE BLOG POSTS
+    Route::prefix('blog-posts')->as('blog-posts.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Backend\BlogPostController::class, 'index'])
+            ->name('index');
+        Route::get('/create', [\App\Http\Controllers\Backend\BlogPostController::class, 'create'])
+            ->name('create');
+        Route::post('/', [\App\Http\Controllers\Backend\BlogPostController::class, 'store'])
+            ->name('store');
+        Route::get('/{id}/edit', [\App\Http\Controllers\Backend\BlogPostController::class, 'edit'])
+            ->name('edit');
+        Route::put('/{blogPost}', [\App\Http\Controllers\Backend\BlogPostController::class, 'update'])
+            ->name('update');
+    });
 });
 
 Route::get('/districts/{province_id}', [\App\Http\Controllers\LocationController::class, 'getDistricts'])

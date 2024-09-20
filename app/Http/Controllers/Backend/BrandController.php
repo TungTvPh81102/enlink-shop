@@ -67,12 +67,6 @@ class BrandController extends Controller
 
             Brand::create($data);
 
-            \Log::info('Brand created sucessfully', [
-                'name' => $data['name'],
-                'image_path' => $data['image'] ?? 'N/A',
-                'status' => $data['status']
-            ]);
-
             return redirect()->route('admin.brands.index')
                 ->with('success', 'Thêm mới thành công');
         } catch (\Exception $e) {
