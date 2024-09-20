@@ -1,4 +1,4 @@
-<div class="side-nav">
+<div  class="side-nav">
     <div class="side-nav-inner">
         <ul class="side-nav-menu scrollable">
             <li class="nav-item ">
@@ -174,6 +174,14 @@
                                            <i class="bx bx-user-circle"></i>
                                 </span>
                     <span class="title">Phân quyền</span>
+                </a>
+            </li>
+            <li class="nav-item dropdown">
+                <a href="{{ route('admin.contacts.index') }}">
+                                <span class="icon-holder">
+                                           <i class="bx bx-message"></i>
+                                </span>
+                    <span class="title">Quản lý liên hệ</span>
                 </a>
             </li>
             <li class="nav-item dropdown">
