@@ -77,3 +77,9 @@ Route::prefix('auth')->as('auth.')->group(function () {
         ->name('reset-password');
 });
 
+Route::prefix('contact')->as('contact.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\ContactController::class, 'showFormContact'])
+        ->name('show-form-contact');
+    Route::post('/', [\App\Http\Controllers\ContactController::class, 'handleContact'])
+        ->name('handle-contact');
+});

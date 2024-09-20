@@ -79,10 +79,18 @@
                         @enderror
                     </div>
                     <div class="form-group ">
-                        <label for="formGroupExampleInput">Địa chỉ</label>
+                        <label for="formGroupExampleInput">Địa chỉ 1</label>
                         <input type="text" class="form-control" name="address"
                                value="{{ old('address', $settings['address'] ?? '') }}">
                         @error('address')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group ">
+                        <label for="formGroupExampleInput">Địa chỉ 2</label>
+                        <input type="text" class="form-control" name="address_2"
+                               value="{{ old('address_2', $settings['address_2'] ?? '') }}">
+                        @error('address_2')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
@@ -91,6 +99,14 @@
                         <input type="text" class="form-control mb-3" name="phone"
                                value="{{ old('phone', $settings['phone'] ?? '') }}">
                         @error('phone')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="form-group ">
+                        <label for="formGroupExampleInput">Hotline</label>
+                        <input type="text" class="form-control mb-3" name="hotline"
+                               value="{{ old('hotline', $settings['hotline'] ?? '') }}">
+                        @error('hotline')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>

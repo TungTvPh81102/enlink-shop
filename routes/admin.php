@@ -183,6 +183,18 @@ Route::prefix('admin')->as('admin.')->group(function () {
         Route::put('/{banner}', [\App\Http\Controllers\Backend\BannerController::class, 'update'])
             ->name('update');
     });
+
+    // ROUTE CONTACTS
+    Route::prefix('contacts')->as('contacts.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Backend\ContactController::class, 'index'])
+            ->name('index');
+        Route::get('/{id}/edit', [\App\Http\Controllers\Backend\ContactController::class, 'edit'])
+            ->name('edit');
+        Route::put('/{contact}', [\App\Http\Controllers\Backend\ContactController::class, 'update'])
+            ->name('update');
+        Route::delete('/{contact}', [\App\Http\Controllers\Backend\ContactController::class, 'destroy'])
+            ->name('destroy');
+    });
 });
 
 Route::get('/districts/{province_id}', [\App\Http\Controllers\LocationController::class, 'getDistricts'])

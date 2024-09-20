@@ -159,7 +159,8 @@
                                 </li>
                                 <li class="nav-item transition-all-xl-1 py-xl-11 py-0 px-xxl-8 px-xl-6 dropdown dropdown-hover">
                                     <a class="nav-link d-flex justify-content-between position-relative py-xl-0 px-xl-0 text-uppercase fw-semibold ls-1 fs-15px fs-xl-14px dropdown-toggle"
-                                       href="{{ route('product-category.list') }}"  id="menu-item-pages" aria-haspopup="true"
+                                       href="{{ route('product-category.list') }}" id="menu-item-pages"
+                                       aria-haspopup="true"
                                        aria-expanded="false">Sản phẩm</a>
                                     <ul class="dropdown-menu py-6" aria-labelledby="menu-item-pages">
                                         @foreach($categories as $category)
@@ -211,7 +212,7 @@
                                     </li>
                                     <li class="nav-item transition-all-xl-1 py-xl-11 py-0 px-xxl-8 px-xl-6 dropdown dropdown-hover dropdown-fullwidth">
                                         <a class="nav-link d-flex justify-content-between position-relative py-xl-0 px-xl-0 text-uppercase fw-semibold ls-1 fs-15px fs-xl-14px"
-                                           href="http://du-an-poly.trihd.id.vn/?action=about">Liên hệ</a>
+                                           href="{{ route('contact.show-form-contact') }}">Liên hệ</a>
                                     </li>
                                 </ul>
                             </div>
