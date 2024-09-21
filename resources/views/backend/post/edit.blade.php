@@ -2,6 +2,7 @@
 
 @section('style')
     <link rel="stylesheet" href="{{ asset('vendor/laraberg/css/laraberg.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
 
 @endsection
 
@@ -80,6 +81,14 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label for="tags">Tags</label>
+                        <select class="form-control select2-tags" name="tags[]" id="tags" multiple="multiple">
+                            @foreach($tags as $tag)
+                                <option {{ in_array($tag->name, $post->tags->pluck('name')->toArray()) ? 'selected' : '' }} value="{{ $tag->name }}">{{ $tag->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="formGroupExampleInput2">Trạng thái</label>
                         <select name="status" id="" class="form-control mb-3">
                             <option value="">--- Chọn ---</option>
@@ -111,6 +120,7 @@
 
 @section('script')
     <script src="{{ asset('assets/backend/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
 
@@ -128,6 +138,12 @@
             $('form').on('submit', function () {
                 var content = Laraberg.getContent('laraberg');
                 $('textarea[name="content"]').val(content);
+            });
+
+            $('.select2-tags').select2({
+                tags: true,
+                tokenSeparators: [','],
+                placeholder: 'Chọn hoặc nhập thẻ mới'
             });
         });
 

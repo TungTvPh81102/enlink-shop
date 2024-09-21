@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\BlogCategories;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -43,8 +45,10 @@ class BlogPostController extends Controller
             ->latest('id')
             ->get();
 
+        $tags = Tag::query()->latest('id')->get();
+
         return view('backend.post.create', compact([
-            'title', 'subtitle', 'blogCategories'
+            'title', 'subtitle', 'blogCategories', 'tags'
         ]));
     }
 
@@ -55,6 +59,8 @@ class BlogPostController extends Controller
     {
         $this->validationRequest($request);
         try {
+            DB::beginTransaction();
+
             $data = $request->except('photo');
             if ($request->hasFile('photo')) {
                 $data['photo'] = $request->file('photo')->store(self::PATH_UPLOAD);
@@ -64,10 +70,23 @@ class BlogPostController extends Controller
                 $data['slug'] = \Illuminate\Support\Str::slug($data['title'], '-');
             }
 
-            Post::create($data);
+            $post = Post::create($data);
+
+            if ($request->has('tags')) {
+                foreach ($request->input('tags') as $item) {
+                    $tags = Tag::query()->firstOrCreate([
+                        'name' => $item,
+                        'slug' => \Illuminate\Support\Str::slug($item, '-')
+                    ]);
+
+                    $post->tags()->attach($tags->id);
+                }
+            }
+            DB::commit();
 
             return redirect()->route('admin.blog-posts.index')->with('success', 'Thêm mới thành công');
         } catch (\Exception $e) {
+            DB::rollBack();
             if (!empty($data['photo']) && Storage::exists($data['photo'])) {
                 Storage::delete($data['photo']);
             }
@@ -86,7 +105,9 @@ class BlogPostController extends Controller
      */
     public function edit(string $id)
     {
-        $post = Post::query()->findOrFail($id);
+        $post = Post::query()
+            ->with(['tags', 'blogCategories'])
+            ->findOrFail($id);
 
         $title = 'Quản lý bài viết';
         $subtitle = 'Câp nhật bài viết: ' . $post->title;
@@ -96,8 +117,10 @@ class BlogPostController extends Controller
             ->latest('id')
             ->get();
 
+        $tags = Tag::query()->latest('id')->get();
+
         return view('backend.post.edit', compact([
-            'title', 'subtitle', 'blogCategories', 'post'
+            'title', 'subtitle', 'blogCategories', 'post', 'tags'
         ]));
     }
 
@@ -123,7 +146,22 @@ class BlogPostController extends Controller
 
             $post->update($data);
 
-            return redirect()->back()->with('success', 'Cập nhật dữ liệu thành coongF');
+            if ($request->has('tags')) {
+                // Xóa các thẻ hiện tại của post
+
+                $post->tags()->detach();
+                foreach ($request->input('tags') as $item) {
+                    $tags = Tag::query()->firstOrCreate([
+                        'name' => $item,
+                        'slug' => \Illuminate\Support\Str::slug($item, '-')
+                    ]);
+
+                    // Gắn thẻ cho bài viết
+                    $post->tags()->attach($tags->id);
+                }
+            }
+
+            return redirect()->back()->with('success', 'Cập nhật dữ liệu thành công');
         } catch (\Exception $e) {
             if (!empty($data['photo']) && Storage::exists($data['photo'])) {
                 Storage::delete($data['photo']);
@@ -148,6 +186,7 @@ class BlogPostController extends Controller
             'content' => 'required',
             'status' => 'required',
             'published_at' => 'required',
+            'tags' => 'nullable|array'
         ]);
     }
 }

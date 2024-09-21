@@ -30,4 +30,9 @@ class Post extends Model
         return $this->belongsTo(BlogCategories::class, 'blog_categories_id');
     }
 
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
 }
