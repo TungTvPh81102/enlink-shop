@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->bigInteger('views')->default(0);
             $table->enum('status', [\App\Models\Post::STATUS_PENDING, \App\Models\Post::STATUS_DRAFT, \App\Models\Post::STATUS_PUBLISHED])
                 ->default(\App\Models\Post::STATUS_PENDING);
-            $table->timestamp('published_at')->nullable();
+            $table->date('published_at')->nullable();
             $table->timestamps();
         });
     }
